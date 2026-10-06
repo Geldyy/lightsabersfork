@@ -1,0 +1,164 @@
+{
+  "player.lightsaber.on": {
+    "category": "players",
+    "sounds": [
+      "lightsabersfork:item/lightsaber/on"
+    ]
+  },
+  "player.lightsaber.off": {
+    "category": "players",
+    "sounds": [
+      "lightsabersfork:item/lightsaber/off"
+    ]
+  },
+  "player.lightsaber.swing": {
+    "category": "players",
+    "sounds": [
+      "lightsabersfork:item/lightsaber/swing1",
+      "lightsabersfork:item/lightsaber/swing2",
+      "lightsabersfork:item/lightsaber/swing3",
+      "lightsabersfork:item/lightsaber/swing4"
+    ]
+  },
+  "player.lightsaber.hit": {
+    "category": "players",
+    "sounds": [
+      "lightsabersfork:item/lightsaber/hit1",
+      "lightsabersfork:item/lightsaber/hit2",
+      "lightsabersfork:item/lightsaber/hit3",
+      "lightsabersfork:item/lightsaber/hit4",
+      "lightsabersfork:item/lightsaber/hit5",
+      "lightsabersfork:item/lightsaber/hit6",
+      "lightsabersfork:item/lightsaber/hit7"
+    ]
+  },
+  "player.lightsaber.sweet_dreams": {
+    "category": "players",
+    "sounds": [
+      "lightsabersfork:random/sweet_dreams"
+    ]
+  },
+
+  "ambient.lightsaber.hum_medium": {
+    "category": "players",
+    "sounds": [
+      {
+        "name": "lightsabersfork:ambient/lightsaber/hum_medium",
+        "stream": false
+      }
+    ]
+  },
+  "ambient.lightsaber.hum_light": {
+    "category": "players",
+    "sounds": [
+      {
+        "name": "lightsabersfork:ambient/lightsaber/hum_light",
+        "stream": false
+      }
+    ]
+  },
+  "ambient.lightsaber.hum_heavy": {
+    "category": "players",
+    "sounds": [
+      {
+        "name": "lightsabersfork:ambient/lightsaber/hum_heavy",
+        "stream": false
+      }
+    ]
+  },
+
+  "player.force.cast": {
+    "category": "players",
+    "sounds": [
+      "lightsabersfork:force/cast"
+    ]
+  },
+  "player.force.dark": {
+    "category": "players",
+    "sounds": [
+      "lightsabersfork:force/cast_dark"
+    ]
+  },
+  "player.force.fail": {
+    "category": "players",
+    "sounds": [
+      "lightsabersfork:force/cast_fail"
+    ]
+  },
+  "player.force.heal": {
+    "category": "players",
+    "sounds": [
+      "lightsabersfork:force/heal"
+    ]
+  },
+  "player.force.lightning": {
+    "category": "players",
+    "sounds": [
+      "lightsabersfork:force/lightning1",
+      "lightsabersfork:force/lightning2",
+      "lightsabersfork:force/lightning3",
+      "lightsabersfork:force/lightning4",
+      "lightsabersfork:force/lightning5"
+    ]
+  },
+  "player.force.stealth.on": {
+    "category": "players",
+    "sounds": [
+      "lightsabersfork:force/stealth"
+    ]
+  },
+  "player.force.stealth.off": {
+    "category": "players",
+    "sounds": [
+      "lightsabersfork:force/stealth"
+    ]
+  },
+  "ambient.fortify": {
+    "category": "players",
+    "sounds": [
+      "lightsabersfork:ambient/force/fortify"
+    ]
+  },
+  "ambient.stealth": {
+    "category": "players",
+    "sounds": [
+      "lightsabersfork:ambient/force/stealth1",
+      "lightsabersfork:ambient/force/stealth2",
+      "lightsabersfork:ambient/force/stealth3"
+    ]
+  },
+
+  "block.holocron.invest": {
+    "category": "blocks",
+    "sounds": [
+      "lightsabersfork:block/holocron/invest"
+    ]
+  },
+  "block.holocron.open": {
+    "category": "blocks",
+    "sounds": [
+      "lightsabersfork:block/holocron/open"
+    ]
+  },
+  "block.holocron.unlock": {
+    "category": "blocks",
+    "sounds": [
+      "lightsabersfork:block/holocron/unlock"
+    ]
+  },
+
+  "mob.sith_ghost.death": {
+    "category": "hostile",
+    "sounds": [
+      "lightsabersfork:mob/sith_ghost/death"
+    ]
+  },
+  "mob.sith_ghost.idle": {
+    "category": "hostile",
+    "sounds": [
+      "lightsabersfork:mob/sith_ghost/idle1",
+      "lightsabersfork:mob/sith_ghost/idle2",
+      "lightsabersfork:mob/sith_ghost/idle3"
+    ]
+  }
+}

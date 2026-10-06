@@ -1,0 +1,8 @@
+{
+  "variants": {
+    "facing=north": { "model": "lightsabersfork:block/disassembly_station" },
+    "facing=south": { "model": "lightsabersfork:block/disassembly_station", "y": 180 },
+    "facing=west":  { "model": "lightsabersfork:block/disassembly_station", "y": 270 },
+    "facing=east":  { "model": "lightsabersfork:block/disassembly_station", "y": 90 }
+  }
+}

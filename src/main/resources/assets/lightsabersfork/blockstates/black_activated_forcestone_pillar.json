@@ -1,0 +1,7 @@
+﻿{
+  "variants": {
+    "axis=y": { "model": "lightsabersfork:block/black_activated_forcestone_pillar" },
+    "axis=z": { "model": "lightsabersfork:block/black_activated_forcestone_pillar_horizontal", "x": 90 },
+    "axis=x": { "model": "lightsabersfork:block/black_activated_forcestone_pillar_horizontal", "x": 90, "y": 90 }
+  }
+}

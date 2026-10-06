@@ -1,0 +1,13 @@
+{
+  "required": true,
+  "package": "com.fiskmods.pika.lightsabers.mixin",
+  "compatibilityLevel": "JAVA_21",
+  "mixins": [],
+  "client": [
+    "PlayerModelMixin",
+    "CameraMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

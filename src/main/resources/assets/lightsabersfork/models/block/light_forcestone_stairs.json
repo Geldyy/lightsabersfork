@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/stairs",
+  "textures": {
+    "bottom": "lightsabersfork:block/light_forcestone",
+    "top": "lightsabersfork:block/light_forcestone",
+    "side": "lightsabersfork:block/light_forcestone"
+  }
+}

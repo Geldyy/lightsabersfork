@@ -1,0 +1,7 @@
+{
+  "variants": {
+    "": {
+      "model": "lightsabersfork:block/lightsaber_forge_light"
+    }
+  }
+}

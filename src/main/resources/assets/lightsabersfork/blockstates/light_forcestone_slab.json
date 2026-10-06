@@ -1,0 +1,7 @@
+{
+  "variants": {
+    "type=bottom": { "model": "lightsabersfork:block/light_forcestone_slab" },
+    "type=top": { "model": "lightsabersfork:block/light_forcestone_slab_top" },
+    "type=double": { "model": "lightsabersfork:block/light_forcestone" }
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "RRR",
+    "BCB",
+    "IAI"
+  ],
+  "key": {
+    "R": { "item": "minecraft:redstone" },
+    "B": { "item": "minecraft:iron_bars" },
+    "C": { "item": "lightsabersfork:circuitry" },
+    "I": { "item": "minecraft:obsidian" },
+    "A": { "item": "minecraft:anvil" }
+  },
+  "result": {
+    "count": 1,
+    "id": "lightsabersfork:disassembly_station"
+  }
+}

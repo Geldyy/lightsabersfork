@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "lightsabersfork:item/focusing_crystal_unstable"
+  }
+}

@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "*-*",
+    "#O#"
+  ],
+  "key": {
+    "*": { "item": "lightsabersfork:light_forcestone_stairs" },
+    "-": { "item": "lightsabersfork:light_forcestone_slab" },
+    "#": { "item": "lightsabersfork:light_forcestone" },
+    "O": { "item": "minecraft:obsidian" }
+  },
+  "result": {
+    "count": 1,
+    "id": "lightsabersfork:lightsaber_forge_light"
+  }
+}
