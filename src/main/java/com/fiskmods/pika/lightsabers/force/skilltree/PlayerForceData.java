@@ -26,11 +26,25 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.player.Player;
 import net.neoforged.bus.api.SubscribeEvent;
+//? if >=26.2 {
+
+/*import net.neoforged.neoforge.common.util.ValueIOSerializable;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
+
+*///?} else {
 import net.neoforged.neoforge.common.util.INBTSerializable;
+//?}
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 import net.neoforged.neoforge.network.PacketDistributor;
 
+//? if >=26.2 {
+
+/*public class PlayerForceData implements ValueIOSerializable {
+
+*///?} else {
 public class PlayerForceData implements INBTSerializable<CompoundTag> {
+//?}
 
 	public static final int MASTERY_TIER_1_TICKS = 6000;
 	public static final int MASTERY_TIER_2_TICKS = 18000;
@@ -1380,7 +1394,14 @@ public class PlayerForceData implements INBTSerializable<CompoundTag> {
 		powerUseStep = initialStep;
 	}
 
-	@Override
+//? if >=26.2 {
+
+	/*@Override
+	public void serialize(ValueOutput output) {
+		output.store(this.serializeNBT(null));
+	}
+
+*///?}
 	public CompoundTag serializeNBT(HolderLookup.Provider provider) {
 		CompoundTag tag = new CompoundTag();
 		tag.putInt("ForcePoints", forcePoints);
@@ -1554,7 +1575,15 @@ public class PlayerForceData implements INBTSerializable<CompoundTag> {
 		return finished;
 	}
 
-	@Override
+//? if >=26.2 {
+
+	/*@Override
+	public void deserialize(ValueInput input) {
+		input.read(com.mojang.serialization.MapCodec.assumeMapUnsafe(CompoundTag.CODEC))
+				.ifPresent(tag -> this.deserializeNBT(input.lookup(), tag));
+	}
+
+*///?}
 	public void deserializeNBT(HolderLookup.Provider provider, CompoundTag tag) {
 		forcePoints = tag.getInt("ForcePoints");
 		forceXp = tag.getFloat("ForceXP");

@@ -3,3 +3,13 @@ plugins {
 }
 
 stonecutter.active "1.21.1" /* [SC] DO NOT EDIT */
+
+stonecutter.parameters {
+    replacements {
+        string(current.parsed >= "26.1") {
+            replace("ResourceLocation", "Identifier")
+            replace("net.minecraft.world.entity.projectile.ThrowableItemProjectile", "net.minecraft.world.entity.projectile.throwableitemprojectile.ThrowableItemProjectile")
+            replace("GuiGraphics", "GuiGraphicsExtractor")
+        }
+    }
+}
