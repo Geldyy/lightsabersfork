@@ -23,7 +23,6 @@ public class DisassemblyStationScreen extends AbstractContainerScreen<Disassembl
             AdvancedLightsabers.MODID, "textures/gui/container/disassembly_station.png"
     );
 
-    // Brennstoff-Rotation für Slot 1
     private static final List<Item> FUELS = List.of(
             Items.COAL, Items.CHARCOAL, Items.BLAZE_ROD, Items.LAVA_BUCKET, Items.COAL_BLOCK
     );
@@ -40,22 +39,18 @@ public class DisassemblyStationScreen extends AbstractContainerScreen<Disassembl
         int x = this.leftPos;
         int y = this.topPos;
 
-        // 1. Hintergrund-GUI
         guiGraphics.blit(TEXTURE, x, y, 0, 0, this.imageWidth, this.imageHeight);
 
-        // 2. Flammen-Animation (Brennstoff)
         if (this.menu.isBurning()) {
             int burn = this.menu.getBurnProgress();
             guiGraphics.blit(TEXTURE, x + 17, y + 37 + 12 - burn, 176, 12 - burn, 14, burn + 2);
         }
 
-        // 3. Pfeil-Animation (Zerlegung)
         int cook = this.menu.getCookProgress();
         guiGraphics.blit(TEXTURE, x + 39, y + 36, 176, 14, cook + 1, 16);
 
         long timeIndex = System.currentTimeMillis() / 1500;
 
-        // 4. Geister-Vorschau: Slot 0 (Lichtschwert mit vollständigen Modelldaten)
         if (this.menu.slots.size() > 0) {
             Slot inputSlot = this.menu.getSlot(0);
             if (!inputSlot.hasItem()) {
@@ -66,7 +61,6 @@ public class DisassemblyStationScreen extends AbstractContainerScreen<Disassembl
             }
         }
 
-        // 5. Geister-Vorschau: Slot 1 (Brennstoff)
         if (this.menu.slots.size() > 1) {
             Slot fuelSlot = this.menu.getSlot(1);
             if (!fuelSlot.hasItem()) {

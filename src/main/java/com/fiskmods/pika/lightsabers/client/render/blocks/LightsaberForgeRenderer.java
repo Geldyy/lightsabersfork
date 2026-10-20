@@ -32,14 +32,11 @@ public class LightsaberForgeRenderer implements BlockEntityRenderer<LightsaberFo
 
         poseStack.pushPose();
 
-        // 1. Zentrierung am Basis-Block (Left)
         poseStack.translate(0.5D, 1.5D, 0.5D);
 
-        // 2. Front-Ausrichtung zum Spieler & Techne-Invertierung
         poseStack.mulPose(Axis.YP.rotationDegrees(-facing.toYRot()));
         poseStack.mulPose(Axis.XP.rotationDegrees(180.0F));
 
-        // 3. Modell rendern
         VertexConsumer vertexConsumer = bufferSource.getBuffer(RenderType.entityCutoutNoCull(TEXTURE));
         this.model.renderToBuffer(poseStack, vertexConsumer, packedLight, OverlayTexture.NO_OVERLAY, 0xFFFFFFFF);
 

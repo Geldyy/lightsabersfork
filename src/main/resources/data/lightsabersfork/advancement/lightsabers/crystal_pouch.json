@@ -1,0 +1,32 @@
+{
+  "parent": "lightsabersfork:lightsabers/root",
+  "display": {
+    "icon": {
+      "id": "lightsabersfork:crystal_pouch"
+    },
+    "title": {
+      "translate": "advancements.lightsabersfork.crystal_pouch.title"
+    },
+    "description": {
+      "translate": "advancements.lightsabersfork.crystal_pouch.desc"
+    },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": true
+  },
+  "rewards": {
+    "experience": 150
+  },
+  "criteria": {
+    "has_pouch": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": "lightsabersfork:crystal_pouch"
+          }
+        ]
+      }
+    }
+  }
+}

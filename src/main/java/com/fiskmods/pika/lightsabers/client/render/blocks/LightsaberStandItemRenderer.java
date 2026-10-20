@@ -33,7 +33,6 @@ public class LightsaberStandItemRenderer extends BlockEntityWithoutLevelRenderer
 
         poseStack.pushPose();
 
-        // Skalierung und zentrierte Ausrichtung für GUI, Hand und Drop
         switch (displayContext) {
             case GUI -> {
                 poseStack.translate(0.5F, 0.5F, 0.5F);
@@ -62,7 +61,7 @@ public class LightsaberStandItemRenderer extends BlockEntityWithoutLevelRenderer
                 poseStack.translate(0.0F, -1.25F, 0.0F);
                 poseStack.scale(0.8F, 0.8F, 0.8F);
             }
-            default -> { // Ground / Drop
+            default -> {
                 poseStack.translate(0.5F, 0.5F, 0.5F);
                 poseStack.mulPose(Axis.XP.rotationDegrees(180.0F));
                 poseStack.translate(0.0F, -1.25F, 0.0F);

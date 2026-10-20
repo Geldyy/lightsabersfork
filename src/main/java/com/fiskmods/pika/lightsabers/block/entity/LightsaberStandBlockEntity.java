@@ -82,7 +82,6 @@ public class LightsaberStandBlockEntity extends BlockEntity {
         }
     }
 
-    // Verhindert, dass lange / doppelte Lichtschwerter am Bildschirmrand verschwinden
     public AABB getRenderBoundingBox() {
         return new AABB(this.worldPosition).inflate(0.5D, 0.25D, 0.5D);
     }

@@ -1,5 +1,9 @@
 package com.fiskmods.pika.lightsabers.client.logic;
 
+import java.util.List;
+
+import org.lwjgl.glfw.GLFW;
+
 import com.fiskmods.pika.lightsabers.AdvancedLightsabers;
 import com.fiskmods.pika.lightsabers.force.skilltree.PlayerForceData;
 import com.fiskmods.pika.lightsabers.force.skilltree.SkillNode;
@@ -8,6 +12,7 @@ import com.fiskmods.pika.lightsabers.force.skilltree.SkillTreeRegistry.TreeCateg
 import com.fiskmods.pika.lightsabers.network.payload.UnlockSkillPayload;
 
 import net.minecraft.client.CameraType;
+import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
@@ -30,6 +35,11 @@ public class MeditationStateManager {
     }
 
     private static boolean isMeditating = false;
+    private static boolean isFreeMeditation = false;
+    private static float initialPlayerYaw = 0.0f;
+    private static float initialPlayerPitch = 0.0f;
+    private static float orbitAngle = 0.0f;
+    private static float prevOrbitAngle = 0.0f;
     private static Vec3 holocronPos = Vec3.ZERO;
     private static Vec3 playerHoverPos = null;
     private static float lockedYaw = 0.0f;
@@ -43,14 +53,22 @@ public class MeditationStateManager {
     private static float nodeFocusProgress = 0.0f;
     private static float prevNodeFocusProgress = 0.0f;
     private static float targetNodeFocus = 0.0f;
+    private static long lastCloseTime = 0L;
+    public static boolean canOpen() {
+        return System.currentTimeMillis() - lastCloseTime > 500L;
+    }
 
     private static TreeCategory currentCategory = TreeCategory.FORCE;
     private static int currentSteleIndex = 0;
 
-    // NEU: Node Steuerung & 2-Sekunden-Hold Mechanik
+    
     private static ResourceLocation selectedNodeId = null;
     private static boolean isHoldingUnlock = false;
     private static int unlockHoldTicks = 0;
+
+    
+    private static boolean showConfirmationDialog = false;
+    private static ResourceLocation pendingSpecializationNode = null;
 
     private static float currentCarouselAngle = 0.0f;
     private static float prevCarouselAngle = 0.0f;
@@ -60,23 +78,104 @@ public class MeditationStateManager {
     private static float prevTransitionProgress = 0.0f;
     private static CameraType previousCameraType = null;
 
-    public static void startMeditation(Player player, BlockPos clickedHolocronPos, boolean isSith) {
+    public static void startFreeMeditation(Player player) {
+        if (!canOpen()) return;
+
+        Minecraft mc = Minecraft.getInstance();
         if (!isMeditating) {
-            Minecraft mc = Minecraft.getInstance();
+            previousCameraType = mc.options.getCameraType();
+            mc.options.setCameraType(CameraType.THIRD_PERSON_BACK);
+        }
+
+        KeyMapping.releaseAll();
+        mc.options.keyUse.setDown(false);
+        while (mc.options.keyUse.consumeClick()) {}
+
+        isMeditating = true;
+        isFreeMeditation = true;
+        isSithHolocron = false;
+        currentPhase = MeditationPhase.CATEGORY_SELECTION;
+
+        initialPlayerYaw = player.getYRot();
+        initialPlayerPitch = player.getXRot();
+        orbitAngle = initialPlayerYaw;
+        prevOrbitAngle = initialPlayerYaw;
+
+        holocronPos = player.position();
+        playerHoverPos = player.position();
+        lockedYaw = initialPlayerYaw;
+
+        currentSteleIndex = 0;
+        currentCarouselAngle = 0.0f;
+        prevCarouselAngle = 0.0f;
+        targetCarouselAngle = 0.0f;
+
+        stelesRevealProgress = 0.0f;
+        prevStelesRevealProgress = 0.0f;
+        targetStelesReveal = 0.0f;
+
+        nodeFocusProgress = 0.0f;
+        prevNodeFocusProgress = 0.0f;
+        targetNodeFocus = 0.0f;
+
+        selectedNodeId = null;
+        isHoldingUnlock = false;
+        unlockHoldTicks = 0;
+        showConfirmationDialog = false;
+        pendingSpecializationNode = null;
+
+        mc.mouseHandler.releaseMouse();
+        GLFW.glfwSetInputMode(mc.getWindow().getWindow(), GLFW.GLFW_CURSOR, GLFW.GLFW_CURSOR_HIDDEN);
+    }
+
+    public static void startMeditation(Player player, BlockPos clickedHolocronPos, boolean isSith) {
+        if (!canOpen()) return;
+
+        Minecraft mc = Minecraft.getInstance();
+        if (!isMeditating) {
+            previousCameraType = mc.options.getCameraType();
+            mc.options.setCameraType(CameraType.THIRD_PERSON_BACK);
+        }
+        
+        KeyMapping.releaseAll();
+        mc.options.keyUse.setDown(false);
+        while (mc.options.keyUse.consumeClick()) {}
+
+        if (!isMeditating) {
             previousCameraType = mc.options.getCameraType();
             mc.options.setCameraType(CameraType.THIRD_PERSON_BACK);
         }
         
         isMeditating = true;
+        isFreeMeditation = false;
         isSithHolocron = isSith;
         currentPhase = MeditationPhase.CATEGORY_SELECTION;
+
+        initialPlayerYaw = player.getYRot();
+        initialPlayerPitch = player.getXRot();
+        orbitAngle = initialPlayerYaw;
+        prevOrbitAngle = initialPlayerYaw;
         
         holocronPos = (clickedHolocronPos != null) ? clickedHolocronPos.getCenter() : player.position();
-        playerHoverPos = new Vec3(player.getX(), holocronPos.y, player.getZ());
         
-        double dX = holocronPos.x - playerHoverPos.x;
-        double dZ = holocronPos.z - playerHoverPos.z;
-        lockedYaw = (float) (Mth.atan2(dZ, dX) * Mth.RAD_TO_DEG) - 90.0F; 
+        double diffX = player.getX() - holocronPos.x;
+        double diffZ = player.getZ() - holocronPos.z;
+        double dist = Math.sqrt(diffX * diffX + diffZ * diffZ);
+
+        if (dist < 0.1D) {
+            diffX = 0.0D;
+            diffZ = 2.5D;
+            dist = 2.5D;
+        }
+
+        double normX = diffX / dist;
+        double normZ = diffZ / dist;
+
+        playerHoverPos = new Vec3(holocronPos.x + normX * 2.5D, player.getY(), holocronPos.z + normZ * 2.5D);
+
+        double dirToHoloX = holocronPos.x - playerHoverPos.x;
+        double dirToHoloZ = holocronPos.z - playerHoverPos.z;
+        lockedYaw = (float) (Mth.atan2(dirToHoloZ, dirToHoloX) * Mth.RAD_TO_DEG) - 90.0F;
         
         currentSteleIndex = 0;
         currentCarouselAngle = 0.0f;
@@ -94,6 +193,11 @@ public class MeditationStateManager {
         selectedNodeId = null;
         isHoldingUnlock = false;
         unlockHoldTicks = 0;
+        showConfirmationDialog = false;
+        pendingSpecializationNode = null;
+
+        mc.mouseHandler.releaseMouse();
+        GLFW.glfwSetInputMode(mc.getWindow().getWindow(), GLFW.GLFW_CURSOR, GLFW.GLFW_CURSOR_HIDDEN);
     }
 
     public static void startMeditation(Player player) {
@@ -103,21 +207,45 @@ public class MeditationStateManager {
     public static void stopMeditation() {
         if (isMeditating) {
             isMeditating = false;
+            isFreeMeditation = false;
+            lastCloseTime = System.currentTimeMillis();
+            cancelSpecialization();
+
+            Minecraft mc = Minecraft.getInstance();
+            if (mc.player != null) {
+                mc.player.setYRot(initialPlayerYaw);
+                mc.player.setXRot(initialPlayerPitch);
+                mc.player.yHeadRot = initialPlayerYaw;
+                mc.player.yBodyRot = initialPlayerYaw;
+            }
+
             restoreCamera();
+            
+            KeyMapping.releaseAll();
+            mc.options.keyUse.setDown(false);
+            mc.options.keyAttack.setDown(false);
+            while (mc.options.keyUse.consumeClick()) {}
+            while (mc.options.keyAttack.consumeClick()) {}
+            long window = mc.getWindow().getWindow();
+            GLFW.glfwSetInputMode(window, GLFW.GLFW_CURSOR, GLFW.GLFW_CURSOR_NORMAL);
+            mc.mouseHandler.grabMouse();
         }
     }
 
     private static void restoreCamera() {
         Minecraft mc = Minecraft.getInstance();
-        if (previousCameraType != null) {
-            mc.options.setCameraType(previousCameraType);
-            previousCameraType = null; 
-        } else {
-            mc.options.setCameraType(CameraType.FIRST_PERSON); 
-        }
+        mc.options.setCameraType(CameraType.FIRST_PERSON); 
+        previousCameraType = null;
     }
 
     public static void selectCategory(TreeCategory category) {
+    	Minecraft mc = Minecraft.getInstance();
+        PlayerForceData data = mc.player != null ? PlayerForceData.get(mc.player) : null;
+        
+        if (data != null && !data.canAccessHolocron()) {
+            return;
+        }
+
         setActiveCategory(category);
         currentPhase = MeditationPhase.TREE_VIEW;
         targetStelesReveal = 1.0f;
@@ -136,15 +264,26 @@ public class MeditationStateManager {
             currentPhase = MeditationPhase.NODE_SELECTION;
             targetNodeFocus = 1.0f; 
             
-            // Sucht den untersten Skill (Startpunkt)
-            java.util.List<com.fiskmods.pika.lightsabers.force.skilltree.SkillNode> nodes = 
-                com.fiskmods.pika.lightsabers.force.skilltree.SkillTreeRegistry.getNodesForStele(currentCategory, currentSteleIndex);
+            List<SkillNode> nodes = 
+                SkillTreeRegistry.getNodesForStele(currentCategory, currentSteleIndex);
             
             if (!nodes.isEmpty()) {
-                com.fiskmods.pika.lightsabers.force.skilltree.SkillNode root = nodes.get(0);
-                for (com.fiskmods.pika.lightsabers.force.skilltree.SkillNode n : nodes) {
-                    if (n.getOffsetY() > root.getOffsetY()) root = n; 
+                SkillNode root = null;
+                for (SkillNode n : nodes) {
+                    if (n.getParents() == null || n.getParents().isEmpty()) {
+                        if (root == null || n.getOffsetY() > root.getOffsetY()) {
+                            root = n;
+                        }
+                    }
                 }
+                
+                if (root == null) {
+                    root = nodes.get(0);
+                    for (SkillNode n : nodes) {
+                        if (n.getOffsetY() > root.getOffsetY()) root = n; 
+                    }
+                }
+                
                 selectedNodeId = root.getId();
             }
         }
@@ -152,6 +291,10 @@ public class MeditationStateManager {
 
     public static void deselectMonolith() {
         if (currentPhase == MeditationPhase.NODE_SELECTION) {
+            if (showConfirmationDialog) {
+                cancelSpecialization();
+                return;
+            }
             currentPhase = MeditationPhase.TREE_VIEW;
             targetNodeFocus = 0.0f; 
             isHoldingUnlock = false;
@@ -167,37 +310,95 @@ public class MeditationStateManager {
         }
     }
 
- // --- NEU: RÄUMLICHE NAVIGATION (WASD) MIT OVERRIDES ---
-    public static void navigateNode(float dirX, float dirY) {
-        if (selectedNodeId == null) return;
-        
-        com.fiskmods.pika.lightsabers.force.skilltree.SkillNode current = 
-            com.fiskmods.pika.lightsabers.force.skilltree.SkillTreeRegistry.getNode(selectedNodeId);
-        if (current == null) return;
+    public static void cycleStele(int direction) {
+        int numSteles = getSteleCount(currentCategory);
+        currentSteleIndex = (currentSteleIndex - direction + numSteles) % numSteles;
+        float targetAngle = calculateTargetAngle(currentSteleIndex, numSteles);
+        setTargetCarouselAngle(targetAngle);
+    }
 
-        // 1. Zuerst prüfen: Gibt es einen harten Override vom Designer?
-        ResourceLocation explicitTarget = null;
-        if (dirY == -1.0F) explicitTarget = current.getNavUp();         // W gedrückt
-        else if (dirY == 1.0F) explicitTarget = current.getNavDown();   // S gedrückt
-        else if (dirX == -1.0F) explicitTarget = current.getNavLeft();  // A gedrückt
-        else if (dirX == 1.0F) explicitTarget = current.getNavRight();  // D gedrückt
+    public static SkillNode findNodeAtScreenPos(double mouseX, double mouseY, int screenWidth, int screenHeight) {
+        if (currentPhase != MeditationPhase.NODE_SELECTION) return null;
 
-        if (explicitTarget != null && com.fiskmods.pika.lightsabers.force.skilltree.SkillTreeRegistry.getNode(explicitTarget) != null) {
-            selectedNodeId = explicitTarget;
-            isHoldingUnlock = false;
-            unlockHoldTicks = 0;
-            return; // Wir sind fertig, der Designer hat das Ziel diktiert!
+        List<SkillNode> nodes = SkillTreeRegistry.getNodesForStele(currentCategory, currentSteleIndex);
+        if (nodes == null || nodes.isEmpty()) return null;
+
+        Minecraft mc = Minecraft.getInstance();
+        PlayerForceData data = mc.player != null ? PlayerForceData.get(mc.player) : null;
+        ResourceLocation activeRank = SkillTreeRegistry.getActiveNeutralRankNode(data);
+
+        SkillNode closest = null;
+        double closestDistSq = Double.MAX_VALUE;
+
+        float scaleX = screenHeight * 0.0075F;
+        float scaleY = screenHeight * 0.0058F;
+        float baseScreenX = screenWidth / 2.0F;
+        float baseScreenY = screenHeight * 0.68F;
+
+        for (SkillNode node : nodes) {
+            if (currentCategory == TreeCategory.FORCE && currentSteleIndex == 1 && isNeutralRank(node.getId())) {
+                if (!node.getId().equals(activeRank)) {
+                    continue;
+                }
+            }
+
+            double nodeScreenX = baseScreenX + (node.getOffsetX() * scaleX);
+            double nodeScreenY = baseScreenY - ((-node.getOffsetY() - 10.0F) * scaleY);
+
+            double dx = mouseX - nodeScreenX;
+            double dy = mouseY - nodeScreenY;
+            double distSq = dx * dx + dy * dy;
+
+            if (distSq < 576.0D && distSq < closestDistSq) {
+                closestDistSq = distSq;
+                closest = node;
+            }
         }
 
-        // 2. FALLBACK: Die bisherige Mathematik, falls du keinen Override gesetzt hast
-        java.util.List<com.fiskmods.pika.lightsabers.force.skilltree.SkillNode> nodes = 
-            com.fiskmods.pika.lightsabers.force.skilltree.SkillTreeRegistry.getNodesForStele(currentCategory, currentSteleIndex);
+        return closest;
+    }
 
-        com.fiskmods.pika.lightsabers.force.skilltree.SkillNode bestTarget = null;
+    public static void navigateNode(float dirX, float dirY) {
+        if (selectedNodeId == null || showConfirmationDialog) return;
+        
+        SkillNode current = SkillTreeRegistry.getNode(selectedNodeId);
+        if (current == null) return;
+
+        Minecraft mc = Minecraft.getInstance();
+        PlayerForceData data = mc.player != null ? PlayerForceData.get(mc.player) : null;
+        ResourceLocation activeRankNode = SkillTreeRegistry.getActiveNeutralRankNode(data);
+
+        ResourceLocation explicitTarget = null;
+        if (dirY == -1.0F) explicitTarget = current.getNavUp();
+        else if (dirY == 1.0F) explicitTarget = current.getNavDown();
+        else if (dirX == -1.0F) explicitTarget = current.getNavLeft();
+        else if (dirX == 1.0F) explicitTarget = current.getNavRight();
+
+        if (explicitTarget != null) {
+            if (isNeutralRank(explicitTarget)) {
+                explicitTarget = activeRankNode;
+            }
+
+            if (SkillTreeRegistry.getNode(explicitTarget) != null) {
+                selectedNodeId = explicitTarget;
+                isHoldingUnlock = false;
+                unlockHoldTicks = 0;
+                return;
+            }
+        }
+
+        List<SkillNode> nodes = SkillTreeRegistry.getNodesForStele(currentCategory, currentSteleIndex);
+        SkillNode bestTarget = null;
         float bestDist = Float.MAX_VALUE;
 
-        for (com.fiskmods.pika.lightsabers.force.skilltree.SkillNode n : nodes) {
+        for (SkillNode n : nodes) {
             if (n.getId().equals(selectedNodeId)) continue;
+
+            if (currentCategory == TreeCategory.FORCE && currentSteleIndex == 1 && isNeutralRank(n.getId())) {
+                if (!n.getId().equals(activeRankNode)) {
+                    continue;
+                }
+            }
             
             float dx = n.getOffsetX() - current.getOffsetX();
             float dy = n.getOffsetY() - current.getOffsetY();
@@ -220,11 +421,42 @@ public class MeditationStateManager {
         }
     }
 
+    public static boolean isNeutralRank(ResourceLocation id) {
+        if (id == null) return false;
+        String path = id.getPath();
+        return path.equals("force_adept") || path.equals("force_channeler") 
+            || path.equals("force_veteran") || path.equals("force_mastery");
+    }
+
+    public static void setSelectedNodeId(ResourceLocation id) {
+        selectedNodeId = id;
+    }
     public static void setHoldingUnlock(boolean holding) {
+        if (showConfirmationDialog) return;
         if (currentPhase == MeditationPhase.NODE_SELECTION && selectedNodeId != null) {
             isHoldingUnlock = holding;
             if (!holding) unlockHoldTicks = 0;
         }
+    }
+
+    public static boolean isConfirmationDialogOpen() { return showConfirmationDialog; }
+    public static ResourceLocation getPendingSpecializationNode() { return pendingSpecializationNode; }
+
+    public static void confirmSpecialization() {
+        if (showConfirmationDialog && pendingSpecializationNode != null) {
+            PacketDistributor.sendToServer(new UnlockSkillPayload(pendingSpecializationNode));
+            showConfirmationDialog = false;
+            pendingSpecializationNode = null;
+            isHoldingUnlock = false;
+            unlockHoldTicks = 0;
+        }
+    }
+
+    public static void cancelSpecialization() {
+        showConfirmationDialog = false;
+        pendingSpecializationNode = null;
+        isHoldingUnlock = false;
+        unlockHoldTicks = 0;
     }
 
     public static float calculateTargetAngle(int index, int count) {
@@ -235,10 +467,13 @@ public class MeditationStateManager {
     }
 
     public static int getSteleCount(TreeCategory category) {
-        if (category == null) return 3;
-        String name = category.name();
-        if (name.contains("LIGHTSABER")) return 3; 
-        if (name.contains("FORCE")) return 3;
+        if (category == TreeCategory.FORCE) {
+            Minecraft mc = Minecraft.getInstance();
+            PlayerForceData data = mc.player != null ? PlayerForceData.get(mc.player) : null;
+            if (data != null && data.isUnifiedTreeUnlocked()) {
+                return 1;
+            }
+        }
         return 3;
     }
 
@@ -251,6 +486,7 @@ public class MeditationStateManager {
         holocronPos = (centerPos != null) ? centerPos : Vec3.ZERO;
         
         if (!meditating) {
+            isFreeMeditation = false;
             transitionProgress = 0.0f;
             prevTransitionProgress = 0.0f;
             stelesRevealProgress = 0.0f;
@@ -258,10 +494,13 @@ public class MeditationStateManager {
             nodeFocusProgress = 0.0f;
             prevNodeFocusProgress = 0.0f;
             playerHoverPos = null;
+            cancelSpecialization();
         }
     }
 
     public static boolean isMeditating() { return isMeditating; }
+    public static boolean isFreeMeditation() { return isFreeMeditation; }
+    public static float getOrbitYaw(float partialTick) { return Mth.lerp(partialTick, prevOrbitAngle, orbitAngle); }
     public static Vec3 getMeditationCenter() { return holocronPos; }
     public static Vec3 getMeditationCenterPos() { return holocronPos; }
     public static float getLockedYaw() { return lockedYaw; }
@@ -294,18 +533,51 @@ public class MeditationStateManager {
         return Mth.lerp(partialTick, prevNodeFocusProgress, nodeFocusProgress);
     }
 
+    public static boolean isPlayerFloating() {
+        Minecraft mc = Minecraft.getInstance();
+        if (mc.player == null) return false;
+        PlayerForceData data = PlayerForceData.get(mc.player);
+        return data != null && data.isForceSensitive();
+    }
+
     @SubscribeEvent
     public static void onClientTick(ClientTickEvent.Post event) {
         Minecraft mc = Minecraft.getInstance();
+        PlayerForceData clientData = mc.player != null ? PlayerForceData.get(mc.player) : null;
+        SkillNode.setClientUnifiedActive(clientData != null && clientData.isUnifiedTreeUnlocked());
         
         if (isMeditating && mc.player != null && playerHoverPos != null) {
-            mc.player.setDeltaMovement(0, 0, 0); 
-            mc.player.setPos(playerHoverPos.x, playerHoverPos.y + 0.25D, playerHoverPos.z);
             
-            mc.player.setYRot(lockedYaw);
-            mc.player.setXRot(10.0F); 
-            mc.player.yHeadRot = lockedYaw;
-            mc.player.yBodyRot = lockedYaw;
+            mc.options.keyUse.setDown(false);
+            while (mc.options.keyUse.consumeClick()) {}
+
+            double yOffset = (!isFreeMeditation && isPlayerFloating()) ? 0.25D : 0.0D;
+            mc.player.setDeltaMovement(0, 0, 0); 
+            mc.player.setPos(playerHoverPos.x, playerHoverPos.y + yOffset, playerHoverPos.z);
+            
+            float faceYaw = isFreeMeditation ? initialPlayerYaw : lockedYaw;
+            float facePitch = isFreeMeditation ? 0.0F : 10.0F;
+            mc.player.setYRot(faceYaw);
+            mc.player.setXRot(facePitch); 
+            mc.player.yHeadRot = faceYaw;
+            mc.player.yBodyRot = faceYaw;
+
+            if (mc.mouseHandler.isMouseGrabbed()) {
+                mc.mouseHandler.releaseMouse();
+            }
+            long window = mc.getWindow().getWindow();
+            if (GLFW.glfwGetInputMode(window, GLFW.GLFW_CURSOR) != GLFW.GLFW_CURSOR_HIDDEN) {
+                GLFW.glfwSetInputMode(window, GLFW.GLFW_CURSOR, GLFW.GLFW_CURSOR_HIDDEN);
+            }
+        }
+
+        prevOrbitAngle = orbitAngle;
+        if (isMeditating && isFreeMeditation) {
+            orbitAngle += 0.4F;
+            if (orbitAngle >= 360.0F) {
+                orbitAngle -= 360.0F;
+                prevOrbitAngle -= 360.0F;
+            }
         }
 
         prevTransitionProgress = transitionProgress;
@@ -317,20 +589,28 @@ public class MeditationStateManager {
             if (stelesRevealProgress != targetStelesReveal) stelesRevealProgress = Mth.lerp(0.1f, stelesRevealProgress, targetStelesReveal);
             if (nodeFocusProgress != targetNodeFocus) nodeFocusProgress = Mth.lerp(0.15f, nodeFocusProgress, targetNodeFocus);
             
-            if (isHoldingUnlock && currentPhase == MeditationPhase.NODE_SELECTION && selectedNodeId != null) {
+            if (isHoldingUnlock && currentPhase == MeditationPhase.NODE_SELECTION && selectedNodeId != null && !showConfirmationDialog) {
                 SkillNode node = SkillTreeRegistry.getNode(selectedNodeId);
                 PlayerForceData data = PlayerForceData.get(mc.player);
 
-                // Nur hochzählen, wenn der Node auch wirklich freigeschaltet werden DARF!
-                if (node != null && data != null && node.canUnlock(mc.player, data)) {
+                boolean canLearnFirstTime = node != null && data != null && node.canUnlock(mc.player, data);
+                boolean canUpgradeTier = node != null && data != null && data.canUpgradePowerTier(node.getId());
+
+                if (canLearnFirstTime || canUpgradeTier) {
                     unlockHoldTicks++;
-                    if (unlockHoldTicks >= 40) { // 2 Sekunden
-                        PacketDistributor.sendToServer(new UnlockSkillPayload(selectedNodeId));
-                        isHoldingUnlock = false;
-                        unlockHoldTicks = 0;
+                    if (unlockHoldTicks >= 40) {
+                        if (canLearnFirstTime && node.isSpecialization() && (data == null || !data.isUnifiedTreeUnlocked())) {
+                            showConfirmationDialog = true;
+                            pendingSpecializationNode = selectedNodeId;
+                            isHoldingUnlock = false;
+                            unlockHoldTicks = 0;
+                        } else {
+                            PacketDistributor.sendToServer(new UnlockSkillPayload(selectedNodeId));
+                            isHoldingUnlock = false;
+                            unlockHoldTicks = 0;
+                        }
                     }
                 } else {
-                    // Falls der Node gesperrt ist, Ladevorgang sofort abbrechen
                     unlockHoldTicks = 0;
                     isHoldingUnlock = false;
                 }

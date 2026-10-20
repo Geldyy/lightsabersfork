@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "powered=false": {
+      "model": "lightsabersfork:block/solar_lens"
+    },
+    "powered=true": {
+      "model": "lightsabersfork:block/solar_lens_powered"
+    }
+  }
+}

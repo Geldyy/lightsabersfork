@@ -39,7 +39,6 @@ public class LightsaberForgeScreen extends AbstractContainerScreen<LightsaberFor
 
     private float spinAngle = 0.0F;
 
-    // Listen für wechselnde Ghost-Vorschau
     private static final List<Item> EMITTERS = List.of(
             ALItems.GRAFLEX_EMITTER.get(), ALItems.REDEEMER_EMITTER.get(), ALItems.MAULER_EMITTER.get(),
             ALItems.PRODIGAL_SON_EMITTER.get(), ALItems.KNIGHTED_EMITTER.get(), ALItems.DROIDEKA_EMITTER.get(),
@@ -73,7 +72,7 @@ public class LightsaberForgeScreen extends AbstractContainerScreen<LightsaberFor
             ALItems.FULCRUM_POMMEL.get(), ALItems.JUGGERNAUT_POMMEL.get(), ALItems.MECHANICAL_POMMEL.get(),
             ALItems.MANDALORIAN_POMMEL.get(), ALItems.FURY_POMMEL.get(), ALItems.REBEL_POMMEL.get(),
             ALItems.IMPERIAL_POMMEL.get(), ALItems.REBORN_POMMEL.get(), ALItems.VAID_MODERN_POMMEL.get(),
-            ALItems.VAID_ANCIENT_POMMEL.get(), ALItems.GRAFLEX_EMITTER.get() // Emitter für Doppelklingen
+            ALItems.VAID_ANCIENT_POMMEL.get(), ALItems.GRAFLEX_EMITTER.get() 
     );
 
     private static final List<Item> COLOR_CRYSTALS = List.of(
@@ -82,7 +81,7 @@ public class LightsaberForgeScreen extends AbstractContainerScreen<LightsaberFor
             ALItems.MINT_GREEN_CRYSTAL.get(), ALItems.YELLOW_CRYSTAL.get(), ALItems.GOLD_CRYSTAL.get(),
             ALItems.RED_CRYSTAL.get(), ALItems.BLOOD_ORANGE_CRYSTAL.get(), ALItems.AMBER_CRYSTAL.get(),
             ALItems.PURPLE_CRYSTAL.get(), ALItems.MAGENTA_CRYSTAL.get(), ALItems.PINK_CRYSTAL.get(),
-            ALItems.INDIGO_CRYSTAL.get(), ALItems.WHITE_CRYSTAL.get()
+            ALItems.INDIGO_CRYSTAL.get(), ALItems.WHITE_CRYSTAL.get() ,ALItems.ARCTIC_BLUE_CRYSTAL.get()
     );
 
     private static final List<Item> FOCUS_CRYSTALS = List.of(
@@ -104,10 +103,8 @@ public class LightsaberForgeScreen extends AbstractContainerScreen<LightsaberFor
         int x = this.leftPos;
         int y = this.topPos;
 
-        // 1. GUI-Hintergrundtextur zeichnen
         guiGraphics.blit(TEXTURE, x, y, 0, 0, this.imageWidth, this.imageHeight);
 
-        // 2. Geister-Vorschau (Ghost Items) mit dynamischem Wechsel alle 1.5 Sekunden
         long timeIndex = System.currentTimeMillis() / 1500;
         for (int i = 0; i < 8; i++) {
             if (i < this.menu.slots.size()) {
@@ -123,7 +120,6 @@ public class LightsaberForgeScreen extends AbstractContainerScreen<LightsaberFor
             }
         }
 
-        // 3. Horizontale 3D-Lichtschwert-Vorschau rendern
         renderLightsaberPreview(guiGraphics, x, y, partialTick);
     }
 
@@ -133,10 +129,10 @@ public class LightsaberForgeScreen extends AbstractContainerScreen<LightsaberFor
             case 1 -> new ItemStack(SWITCHES.get((int) (timeIndex % SWITCHES.size())));
             case 2 -> new ItemStack(GRIPS.get((int) (timeIndex % GRIPS.size())));
             case 3 -> new ItemStack(POMMELS.get((int) (timeIndex % POMMELS.size())));
-            case 4 -> new ItemStack(ALItems.CIRCUITRY.get()); // Slot 4: Schaltkreis
-            case 5 -> new ItemStack(COLOR_CRYSTALS.get((int) (timeIndex % COLOR_CRYSTALS.size()))); // Slot 5: Farbkristall
-            case 6 -> new ItemStack(FOCUS_CRYSTALS.get((int) (timeIndex % FOCUS_CRYSTALS.size()))); // Slot 6: Fokus-Kristall 1
-            case 7 -> new ItemStack(FOCUS_CRYSTALS.get((int) ((timeIndex + 1) % FOCUS_CRYSTALS.size()))); // Slot 7: Fokus-Kristall 2
+            case 4 -> new ItemStack(ALItems.CIRCUITRY.get());
+            case 5 -> new ItemStack(COLOR_CRYSTALS.get((int) (timeIndex % COLOR_CRYSTALS.size()))); 
+            case 6 -> new ItemStack(FOCUS_CRYSTALS.get((int) (timeIndex % FOCUS_CRYSTALS.size()))); 
+            case 7 -> new ItemStack(FOCUS_CRYSTALS.get((int) ((timeIndex + 1) % FOCUS_CRYSTALS.size())));
             default -> ItemStack.EMPTY;
         };
     }
@@ -159,8 +155,9 @@ public class LightsaberForgeScreen extends AbstractContainerScreen<LightsaberFor
             LightsaberData data = resultStack.get(ALDataComponents.LIGHTSABER_DATA.get());
             if (data != null) {
                 float cmLength = calculateDynamicLengthCm(data);
-                String lengthString = String.format(Locale.GERMANY, "%,.3f cm", cmLength);
-                guiGraphics.drawString(this.font, Component.literal(lengthString), 45, 55, 0xFFFFFF, false);
+                String formattedLength = String.format(Locale.getDefault(), "%,.1f", cmLength);
+                Component lengthComp = Component.translatable("gui.lightsabersfork.lightsaber_forge.length", formattedLength);
+                guiGraphics.drawString(this.font, lengthComp, 45, 55, 0xFFFFFF, false);
             }
         }
     }

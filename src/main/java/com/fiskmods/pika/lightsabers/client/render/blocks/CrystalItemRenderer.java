@@ -43,7 +43,6 @@ public class CrystalItemRenderer extends BlockEntityWithoutLevelRenderer {
 
         poseStack.pushPose();
 
-        // 1. Ausrichtung, Zentrierung und Original-Skalierungsfaktoren
         switch (displayContext) {
             case GUI -> {
                 poseStack.translate(0.5F, 0.15F, 0.5F);
@@ -52,7 +51,7 @@ public class CrystalItemRenderer extends BlockEntityWithoutLevelRenderer {
                 poseStack.mulPose(Axis.XP.rotationDegrees(180.0F));
                 poseStack.scale(2.2F, 2.2F, 2.2F);
             }
-            case FIXED -> { // Schmiede-Slots / Rahmen
+            case FIXED -> {
                 poseStack.translate(0.5F, 0.20F, 0.5F);
                 poseStack.mulPose(Axis.XP.rotationDegrees(180.0F));
                 poseStack.scale(1.8F, 1.8F, 1.8F);
@@ -68,7 +67,7 @@ public class CrystalItemRenderer extends BlockEntityWithoutLevelRenderer {
                 poseStack.mulPose(Axis.XP.rotationDegrees(180.0F));
                 poseStack.scale(1.2F, 1.2F, 1.2F);
             }
-            case GROUND -> { // Als Drop auf dem Boden
+            case GROUND -> {
                 poseStack.translate(0.5F, 0.12F, 0.5F);
                 poseStack.mulPose(Axis.XP.rotationDegrees(180.0F));
                 poseStack.scale(1.8F, 1.8F, 1.8F);
@@ -80,7 +79,6 @@ public class CrystalItemRenderer extends BlockEntityWithoutLevelRenderer {
             }
         }
 
-        // 2. Transparenz (Alpha = 60 %) & Leuchtkraft
         int alpha = (int) (0.60F * 255.0F);
         int argb = FastColor.ARGB32.color(alpha, (int) (r * 255.0F), (int) (g * 255.0F), (int) (b * 255.0F));
 

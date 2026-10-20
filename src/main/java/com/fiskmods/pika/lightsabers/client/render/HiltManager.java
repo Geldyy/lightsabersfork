@@ -26,61 +26,60 @@ import net.minecraft.world.item.Item;
 
 public class HiltManager {
 
-    private static final Map<String, HiltSetModel> HILT_SETS = new HashMap<>();
-    private static final HiltSetModel DEFAULT_SET = new GraflexSetModel();
+	private static final Map<String, HiltSetModel> HILT_SETS = new HashMap<>();
+	private static final HiltSetModel DEFAULT_SET = new GraflexSetModel();
 
-    static {
-        register(DEFAULT_SET);
-        register(new ProdigalSonSetModel());
-        register(new VaidSetModel("vaid_ancient"));
-        register(new VaidSetModel("vaid_modern"));
-        register(new RedeemerSetModel());
-        register(new RebornSetModel());
-        register(new MechanicalSetModel());
-        register(new RebelSetModel());
-        register(new MaulerSetModel());
-        register(new MandalorianSetModel());
-        register(new KnightedSetModel());
-        register(new JuggernautSetModel());
-        register(new ImperialSetModel());
-        register(new FurySetModel());
-        register(new FulcrumSetModel());
-        register(new DroidekaSetModel());
-    }
+	static {
+		register(DEFAULT_SET);
+		register(new ProdigalSonSetModel());
+		register(new VaidSetModel("vaid_ancient"));
+		register(new VaidSetModel("vaid_modern"));
+		register(new RedeemerSetModel());
+		register(new RebornSetModel());
+		register(new MechanicalSetModel());
+		register(new RebelSetModel());
+		register(new MaulerSetModel());
+		register(new MandalorianSetModel());
+		register(new KnightedSetModel());
+		register(new JuggernautSetModel());
+		register(new ImperialSetModel());
+		register(new FurySetModel());
+		register(new FulcrumSetModel());
+		register(new DroidekaSetModel());
+	}
 
-    public static void register(HiltSetModel setModel) {
-        HILT_SETS.put(setModel.getId(), setModel);
-    }
+	public static void register(HiltSetModel setModel) {
+		HILT_SETS.put(setModel.getId(), setModel);
+	}
 
-    /**
-     * Retrieves the hilt model set by identifier.
-     */
-    public static HiltSetModel getSet(String setId) {
-        if (setId == null) return DEFAULT_SET;
-        return HILT_SETS.getOrDefault(setId.toLowerCase(), DEFAULT_SET);
-    }
+	public static HiltSetModel getSet(String setId) {
+		if (setId == null)
+			return DEFAULT_SET;
+		return HILT_SETS.getOrDefault(setId.toLowerCase(), DEFAULT_SET);
+	}
 
-    public static HiltSetModel getSet(Item item) {
-        if (item == null) return DEFAULT_SET;
+	public static HiltSetModel getSet(Item item) {
+		if (item == null)
+			return DEFAULT_SET;
 
-        if (item instanceof ItemLightsaberPart part) {
-            try {
-                String hiltName = part.getHiltName();
-                if (hiltName != null && HILT_SETS.containsKey(hiltName.toLowerCase())) {
-                    return HILT_SETS.get(hiltName.toLowerCase());
-                }
-            } catch (Exception ignored) {
-                // Fallback
-            }
-        }
+		if (item instanceof ItemLightsaberPart part) {
+			try {
+				String hiltName = part.getHiltName();
+				if (hiltName != null && HILT_SETS.containsKey(hiltName.toLowerCase())) {
+					return HILT_SETS.get(hiltName.toLowerCase());
+				}
+			} catch (Exception ignored) {
 
-        String path = BuiltInRegistries.ITEM.getKey(item).getPath().toLowerCase();
-        for (Map.Entry<String, HiltSetModel> entry : HILT_SETS.entrySet()) {
-            if (path.contains(entry.getKey())) {
-                return entry.getValue();
-            }
-        }
+			}
+		}
 
-        return DEFAULT_SET;
-    }
+		String path = BuiltInRegistries.ITEM.getKey(item).getPath().toLowerCase();
+		for (Map.Entry<String, HiltSetModel> entry : HILT_SETS.entrySet()) {
+			if (path.contains(entry.getKey())) {
+				return entry.getValue();
+			}
+		}
+
+		return DEFAULT_SET;
+	}
 }

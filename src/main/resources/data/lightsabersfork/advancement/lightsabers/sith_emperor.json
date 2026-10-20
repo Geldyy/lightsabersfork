@@ -1,0 +1,25 @@
+{
+  "parent": "lightsabersfork:lightsabers/sith_all_skills",
+  "display": {
+    "icon": {
+      "id": "lightsabersfork:focusing_crystal_cracked"
+    },
+    "title": {
+      "translate": "advancements.lightsabersfork.sith_emperor.title"
+    },
+    "description": {
+      "translate": "advancements.lightsabersfork.sith_emperor.desc"
+    },
+    "frame": "challenge",
+    "show_toast": true,
+    "announce_to_chat": true
+  },
+  "rewards": {
+    "experience": 3500
+  },
+  "criteria": {
+    "unlocked": {
+      "trigger": "minecraft:impossible"
+    }
+  }
+}

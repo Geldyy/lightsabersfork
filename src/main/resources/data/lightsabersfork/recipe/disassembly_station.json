@@ -9,7 +9,7 @@
   "key": {
     "R": { "item": "minecraft:redstone" },
     "B": { "item": "minecraft:iron_bars" },
-    "C": { "item": "lightsabersfork:circuitry" },
+    "C": { "item": "lightsabersfork:lightsaber_circuitry" },
     "I": { "item": "minecraft:obsidian" },
     "A": { "item": "minecraft:anvil" }
   },

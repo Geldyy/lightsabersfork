@@ -1,15 +1,19 @@
 package com.fiskmods.pika.lightsabers.world.inventory;
 
 import com.fiskmods.pika.lightsabers.ALBlocks;
+import com.fiskmods.pika.lightsabers.ALDataComponents;
 import com.fiskmods.pika.lightsabers.ALItems;
 import com.fiskmods.pika.lightsabers.ALMenuTypes;
 import com.fiskmods.pika.lightsabers.block.entity.LightsaberForgeBlockEntity;
+import com.fiskmods.pika.lightsabers.force.skilltree.PlayerForceData;
 import com.fiskmods.pika.lightsabers.item.crystals.ItemColorCrystal;
 import com.fiskmods.pika.lightsabers.item.crystals.ItemFocusingCrystal;
 import com.fiskmods.pika.lightsabers.item.lightsaber.ItemLightsaberPart;
+import com.fiskmods.pika.lightsabers.item.lightsaber.LightsaberData;
 import com.fiskmods.pika.lightsabers.item.lightsaber.PartType;
 
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
@@ -20,139 +24,149 @@ import net.neoforged.neoforge.items.SlotItemHandler;
 
 public class LightsaberForgeMenu extends AbstractContainerMenu {
 
-    private final LightsaberForgeBlockEntity blockEntity;
+	private final LightsaberForgeBlockEntity blockEntity;
 
-    // Client-Konstruktor
-    public LightsaberForgeMenu(int containerId, Inventory playerInventory, FriendlyByteBuf extraData) {
-        this(containerId, playerInventory, (LightsaberForgeBlockEntity) playerInventory.player.level().getBlockEntity(extraData.readBlockPos()));
-    }
+	public LightsaberForgeMenu(int containerId, Inventory playerInventory, FriendlyByteBuf extraData) {
+		this(containerId, playerInventory,
+				(LightsaberForgeBlockEntity) playerInventory.player.level().getBlockEntity(extraData.readBlockPos()));
+	}
 
-    // Server-Konstruktor
-    public LightsaberForgeMenu(int containerId, Inventory playerInventory, LightsaberForgeBlockEntity blockEntity) {
-        super(ALMenuTypes.LIGHTSABER_FORGE.get(), containerId);
-        this.blockEntity = blockEntity;
+	public LightsaberForgeMenu(int containerId, Inventory playerInventory, LightsaberForgeBlockEntity blockEntity) {
+		super(ALMenuTypes.LIGHTSABER_FORGE.get(), containerId);
+		this.blockEntity = blockEntity;
 
-        // Slots 0 bis 3: Bauteile (Emitter, Switch Section, Grip, Pommel)
-        for (int i = 0; i < 4; i++) {
-            final int slotIndex = i;
-            this.addSlot(new SlotItemHandler(blockEntity.getInventory(), slotIndex, 20, 17 + i * 18) {
-                @Override
-                public boolean mayPlace(ItemStack stack) {
-                    if (stack.getItem() instanceof ItemLightsaberPart part) {
-                        return switch (slotIndex) {
-                            case 0 -> part.getPartType() == PartType.EMITTER;
-                            case 1 -> part.getPartType() == PartType.SWITCH_SECTION;
-                            case 2 -> part.getPartType() == PartType.BODY;
-                            case 3 -> part.getPartType() == PartType.POMMEL || part.getPartType() == PartType.EMITTER;
-                            default -> false;
-                        };
-                    }
-                    return false;
-                }
-            });
-        }
+		for (int i = 0; i < 4; i++) {
+			final int slotIndex = i;
+			this.addSlot(new SlotItemHandler(blockEntity.getInventory(), slotIndex, 20, 17 + i * 18) {
+				@Override
+				public boolean mayPlace(ItemStack stack) {
+					if (stack.getItem() instanceof ItemLightsaberPart part) {
+						return switch (slotIndex) {
+						case 0 -> part.getPartType() == PartType.EMITTER;
+						case 1 -> part.getPartType() == PartType.SWITCH_SECTION;
+						case 2 -> part.getPartType() == PartType.BODY;
+						case 3 -> part.getPartType() == PartType.POMMEL || part.getPartType() == PartType.EMITTER;
+						default -> false;
+						};
+					}
+					return false;
+				}
+			});
+		}
 
-        // Slot 4: Circuitry
-        this.addSlot(new SlotItemHandler(blockEntity.getInventory(), 4, 43, 71) {
-            @Override
-            public boolean mayPlace(ItemStack stack) {
-                return stack.is(ALItems.CIRCUITRY.get());
-            }
-        });
+		this.addSlot(new SlotItemHandler(blockEntity.getInventory(), 4, 43, 71) {
+			@Override
+			public boolean mayPlace(ItemStack stack) {
+				return stack.is(ALItems.CIRCUITRY.get());
+			}
+		});
 
-        // Slot 5: Farbkristall (Color Crystal)
-        this.addSlot(new SlotItemHandler(blockEntity.getInventory(), 5, 66, 71) {
-            @Override
-            public boolean mayPlace(ItemStack stack) {
-                return stack.getItem() instanceof ItemColorCrystal;
-            }
-        });
+		this.addSlot(new SlotItemHandler(blockEntity.getInventory(), 5, 66, 71) {
+			@Override
+			public boolean mayPlace(ItemStack stack) {
+				return stack.getItem() instanceof ItemColorCrystal;
+			}
+		});
 
-        // Slots 6 & 7: Fokussierkristalle (Focusing Crystals)
-        for (int i = 0; i < 2; i++) {
-            this.addSlot(new SlotItemHandler(blockEntity.getInventory(), 6 + i, 89 + i * 18, 71) {
-                @Override
-                public boolean mayPlace(ItemStack stack) {
-                    // Akzeptiert jetzt alle neuen Fokussierkristalle (Compressed, Cracked, Inverting, Fine Cut, Prismatic)
-                    return stack.getItem() instanceof ItemFocusingCrystal;
-                }
-            });
-        }
+		for (int i = 0; i < 2; i++) {
+			this.addSlot(new SlotItemHandler(blockEntity.getInventory(), 6 + i, 89 + i * 18, 71) {
+				@Override
+				public boolean mayPlace(ItemStack stack) {
+					return stack.getItem() instanceof ItemFocusingCrystal;
+				}
+			});
+		}
 
-        // Slot 8: Ergebnis-Slot (Lichtschwert)
-        this.addSlot(new SlotItemHandler(blockEntity.getInventory(), 8, 136, 87) {
-            @Override
-            public boolean mayPlace(ItemStack stack) {
-                return false;
-            }
+		this.addSlot(new SlotItemHandler(blockEntity.getInventory(), 8, 136, 87) {
+			@Override
+			public boolean mayPlace(ItemStack stack) {
+				return false;
+			}
 
-            @Override
-            public void onTake(Player player, ItemStack stack) {
-                for (int i = 0; i < 8; i++) {
-                    blockEntity.getInventory().extractItem(i, 1, false);
-                }
-                super.onTake(player, stack);
-            }
-        });
+			@Override
+			public void onTake(Player player, ItemStack stack) {
+				for (int i = 0; i < 8; i++) {
+					blockEntity.getInventory().extractItem(i, 1, false);
+				}
 
-        addPlayerInventory(playerInventory);
-        addPlayerHotbar(playerInventory);
-    }
+				if (player instanceof ServerPlayer serverPlayer) {
+					PlayerForceData data = PlayerForceData.get(serverPlayer);
+					if (data != null) {
+						if (data != null) {
+							data.rewardFirstLightsaber(serverPlayer);
 
-    @Override
-    public boolean stillValid(Player player) {
-        return stillValid(ContainerLevelAccess.create(blockEntity.getLevel(), blockEntity.getBlockPos()), player, ALBlocks.LIGHTSABER_FORGE_LIGHT.get());
-    }
+							LightsaberData lsData = stack.get(ALDataComponents.LIGHTSABER_DATA.get());
+							if (lsData != null && !lsData.focusCrystals().isEmpty()) {
+								data.rewardFocusedLightsaber(serverPlayer);
+							}
+						}
+						data.rewardFirstLightsaber(serverPlayer);
+					}
+				}
 
-    private void addPlayerInventory(Inventory playerInventory) {
-        for (int row = 0; row < 3; ++row) {
-            for (int col = 0; col < 9; ++col) {
-                this.addSlot(new Slot(playerInventory, col + row * 9 + 9, 8 + col * 18, 114 + row * 18));
-            }
-        }
-    }
+				super.onTake(player, stack);
+			}
+		});
 
-    private void addPlayerHotbar(Inventory playerInventory) {
-        for (int col = 0; col < 9; ++col) {
-            this.addSlot(new Slot(playerInventory, col, 8 + col * 18, 172));
-        }
-    }
+		addPlayerInventory(playerInventory);
+		addPlayerHotbar(playerInventory);
+	}
 
-    @Override
-    public ItemStack quickMoveStack(Player player, int index) {
-        ItemStack itemstack = ItemStack.EMPTY;
-        Slot slot = this.slots.get(index);
+	@Override
+	public boolean stillValid(Player player) {
+		return stillValid(ContainerLevelAccess.create(blockEntity.getLevel(), blockEntity.getBlockPos()), player,
+				ALBlocks.LIGHTSABER_FORGE_LIGHT.get());
+	}
 
-        if (slot != null && slot.hasItem()) {
-            ItemStack stackInSlot = slot.getItem();
-            itemstack = stackInSlot.copy();
+	private void addPlayerInventory(Inventory playerInventory) {
+		for (int row = 0; row < 3; ++row) {
+			for (int col = 0; col < 9; ++col) {
+				this.addSlot(new Slot(playerInventory, col + row * 9 + 9, 8 + col * 18, 114 + row * 18));
+			}
+		}
+	}
 
-            if (index == 8) {
-                if (!this.moveItemStackTo(stackInSlot, 9, 45, true)) {
-                    return ItemStack.EMPTY;
-                }
-                slot.onQuickCraft(stackInSlot, itemstack);
-            } else if (index >= 9) {
-                if (!this.moveItemStackTo(stackInSlot, 0, 8, false)) {
-                    return ItemStack.EMPTY;
-                }
-            } else if (!this.moveItemStackTo(stackInSlot, 9, 45, false)) {
-                return ItemStack.EMPTY;
-            }
+	private void addPlayerHotbar(Inventory playerInventory) {
+		for (int col = 0; col < 9; ++col) {
+			this.addSlot(new Slot(playerInventory, col, 8 + col * 18, 172));
+		}
+	}
 
-            if (stackInSlot.isEmpty()) {
-                slot.setByPlayer(ItemStack.EMPTY);
-            } else {
-                slot.setChanged();
-            }
+	@Override
+	public ItemStack quickMoveStack(Player player, int index) {
+		ItemStack itemstack = ItemStack.EMPTY;
+		Slot slot = this.slots.get(index);
 
-            if (stackInSlot.getCount() == itemstack.getCount()) {
-                return ItemStack.EMPTY;
-            }
+		if (slot != null && slot.hasItem()) {
+			ItemStack stackInSlot = slot.getItem();
+			itemstack = stackInSlot.copy();
 
-            slot.onTake(player, stackInSlot);
-        }
+			if (index == 8) {
+				if (!this.moveItemStackTo(stackInSlot, 9, 45, true)) {
+					return ItemStack.EMPTY;
+				}
+				slot.onQuickCraft(stackInSlot, itemstack);
+			} else if (index >= 9) {
+				if (!this.moveItemStackTo(stackInSlot, 0, 8, false)) {
+					return ItemStack.EMPTY;
+				}
+			} else if (!this.moveItemStackTo(stackInSlot, 9, 45, false)) {
+				return ItemStack.EMPTY;
+			}
 
-        return itemstack;
-    }
+			if (stackInSlot.isEmpty()) {
+				slot.setByPlayer(ItemStack.EMPTY);
+			} else {
+				slot.setChanged();
+			}
+
+			if (stackInSlot.getCount() == itemstack.getCount()) {
+				return ItemStack.EMPTY;
+			}
+
+			slot.onTake(player, stackInSlot);
+		}
+
+		return itemstack;
+	}
 }

@@ -1,0 +1,17 @@
+{
+  "type": "lightsabersfork:add_loot",
+  "conditions": [
+    {
+      "condition": "neoforge:loot_table_id",
+      "loot_table_id": "minecraft:chests/nether_bridge"
+    }
+  ],
+  "items": [
+    "lightsabersfork:red_crystal",
+    "lightsabersfork:blood_orange_crystal"
+  ],
+  "chance": 0.50,
+  "min_count": 1,
+  "max_count": 2,
+  "pick_random_one": true
+}

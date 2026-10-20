@@ -16,53 +16,56 @@ import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
 
 public record ThrowLightsaberPayload() implements CustomPacketPayload {
-    public static final Type<ThrowLightsaberPayload> TYPE = new Type<>(ResourceLocation.fromNamespaceAndPath(AdvancedLightsabers.MODID, "throw_lightsaber"));
-    public static final StreamCodec<FriendlyByteBuf, ThrowLightsaberPayload> CODEC = StreamCodec.unit(new ThrowLightsaberPayload());
+	public static final Type<ThrowLightsaberPayload> TYPE = new Type<>(
+			ResourceLocation.fromNamespaceAndPath(AdvancedLightsabers.MODID, "throw_lightsaber"));
+	public static final StreamCodec<FriendlyByteBuf, ThrowLightsaberPayload> CODEC = StreamCodec
+			.unit(new ThrowLightsaberPayload());
 
-    @Override
-    public Type<? extends CustomPacketPayload> type() {
-        return TYPE;
-    }
+	@Override
+	public Type<? extends CustomPacketPayload> type() {
+		return TYPE;
+	}
 
-    public static void handle(ThrowLightsaberPayload payload, IPayloadContext context) {
-        context.enqueueWork(() -> {
-            Player player = context.player();
-            PlayerForceData data = PlayerForceData.get(player);
-            
-            // SECURITY CHECK: Wenn der Skill nicht gelernt ist, wird der Payload ignoriert!
-            if (data == null || !data.hasSkill(ResourceLocation.fromNamespaceAndPath(AdvancedLightsabers.MODID, "ls_throw"))) {
-                return;
-            }
+	public static void handle(ThrowLightsaberPayload payload, IPayloadContext context) {
+		context.enqueueWork(() -> {
+			Player player = context.player();
+			PlayerForceData data = PlayerForceData.get(player);
 
-            ItemStack mainHand = player.getMainHandItem();
-            ItemStack offHand = player.getOffhandItem();
+			if (data == null
+					|| !data.hasSkill(ResourceLocation.fromNamespaceAndPath(AdvancedLightsabers.MODID, "ls_throw"))) {
+				return;
+			}
 
-            boolean mainActive = mainHand.getItem() instanceof ItemLightsaber && mainHand.getOrDefault(ALDataComponents.IS_ACTIVE.get(), false);
-            boolean offActive = offHand.getItem() instanceof ItemLightsaber && offHand.getOrDefault(ALDataComponents.IS_ACTIVE.get(), false);
+			ItemStack mainHand = player.getMainHandItem();
+			ItemStack offHand = player.getOffhandItem();
 
-            InteractionHand handToThrow = null;
-            ItemStack stackToThrow = ItemStack.EMPTY;
-            int slotIndex = -1;
+			boolean mainActive = mainHand.getItem() instanceof ItemLightsaber
+					&& mainHand.getOrDefault(ALDataComponents.IS_ACTIVE.get(), false);
+			boolean offActive = offHand.getItem() instanceof ItemLightsaber
+					&& offHand.getOrDefault(ALDataComponents.IS_ACTIVE.get(), false);
 
-            if (mainActive) {
-                handToThrow = InteractionHand.MAIN_HAND;
-                stackToThrow = mainHand;
-                slotIndex = player.getInventory().selected;
-            } 
-            else if (offActive) {
-                handToThrow = InteractionHand.OFF_HAND;
-                stackToThrow = offHand;
-                slotIndex = -2;
-            }
+			InteractionHand handToThrow = null;
+			ItemStack stackToThrow = ItemStack.EMPTY;
+			int slotIndex = -1;
 
-            if (handToThrow != null) {
-                EntityLightsaber entity = new EntityLightsaber(player.level(), player, stackToThrow, slotIndex);
-                entity.setPos(player.getX(), player.getEyeY() - 0.1, player.getZ());
-                entity.shootFromRotation(player, player.getXRot(), player.getYRot(), 0.0F, 1.5F, 1.0F);
-                player.level().addFreshEntity(entity);
-                
-                player.setItemInHand(handToThrow, ItemStack.EMPTY);
-            }
-        });
-    }
+			if (mainActive) {
+				handToThrow = InteractionHand.MAIN_HAND;
+				stackToThrow = mainHand;
+				slotIndex = player.getInventory().selected;
+			} else if (offActive) {
+				handToThrow = InteractionHand.OFF_HAND;
+				stackToThrow = offHand;
+				slotIndex = -2;
+			}
+
+			if (handToThrow != null) {
+				EntityLightsaber entity = new EntityLightsaber(player.level(), player, stackToThrow, slotIndex);
+				entity.setPos(player.getX(), player.getEyeY() - 0.1, player.getZ());
+				entity.shootFromRotation(player, player.getXRot(), player.getYRot(), 0.0F, 1.5F, 1.0F);
+				player.level().addFreshEntity(entity);
+
+				player.setItemInHand(handToThrow, ItemStack.EMPTY);
+			}
+		});
+	}
 }

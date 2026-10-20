@@ -1,0 +1,32 @@
+{
+  "parent": "lightsabersfork:lightsabers/root",
+  "display": {
+    "icon": {
+      "id": "lightsabersfork:lightsaber_circuitry"
+    },
+    "title": {
+      "translate": "advancements.lightsabersfork.craft_circuitry.title"
+    },
+    "description": {
+      "translate": "advancements.lightsabersfork.craft_circuitry.desc"
+    },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": true
+  },
+  "rewards": {
+    "experience": 200
+  },
+  "criteria": {
+    "has_circuitry": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": "lightsabersfork:lightsaber_circuitry"
+          }
+        ]
+      }
+    }
+  }
+}

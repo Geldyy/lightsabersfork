@@ -36,10 +36,8 @@ public class CrystalPouchScreen extends AbstractContainerScreen<CrystalPouchMenu
         int x = (this.width - this.imageWidth) / 2;
         int y = (this.height - this.imageHeight) / 2;
 
-        // 1. Hintergrund-Textur der Tasche
         guiGraphics.blit(TEXTURE, x, y, 0, 0, this.imageWidth, this.imageHeight);
 
-        // 2. Geister-Vorschau für alle leeren Kristall-Slots
         for (int i = 0; i < CrystalPouchMenu.POUCH_SLOTS; i++) {
             if (!this.menu.getSlot(i).hasItem()) {
                 int slotX = x + 8 + (i % 9) * 18;
@@ -50,7 +48,6 @@ public class CrystalPouchScreen extends AbstractContainerScreen<CrystalPouchMenu
                     ItemColorCrystal crystalItem = ItemColorCrystal.getByColor(color);
 
                     if (crystalItem != null) {
-                        // 25% Deckkraft (0.25F Alpha) wie im 1.7.10-Original
                         guiGraphics.setColor(1.0F, 1.0F, 1.0F, 0.25F);
                         guiGraphics.renderFakeItem(new ItemStack(crystalItem), slotX, slotY);
                         guiGraphics.setColor(1.0F, 1.0F, 1.0F, 1.0F);

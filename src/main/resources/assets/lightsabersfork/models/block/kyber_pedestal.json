@@ -1,0 +1,50 @@
+{
+  "ambientocclusion": true,
+  "textures": {
+    "particle": "lightsabersfork:block/light_forcestone_pillar_top",
+    "base": "lightsabersfork:block/light_forcestone",
+    "column": "lightsabersfork:block/light_activated_forcestone_pillar",
+    "top": "lightsabersfork:block/light_forcestone_inscribed"
+  },
+  "elements": [
+    {
+      "name": "base_step",
+      "from": [1, 0, 1],
+      "to": [15, 3, 15],
+      "faces": {
+        "down":  { "texture": "#base", "cullface": "down" },
+        "up":    { "texture": "#base" },
+        "north": { "texture": "#base" },
+        "south": { "texture": "#base" },
+        "west":  { "texture": "#base" },
+        "east":  { "texture": "#base" }
+      }
+    },
+    {
+      "name": "column",
+      "from": [4, 3, 4],
+      "to": [12, 10, 12],
+      "faces": {
+        "up":    { "texture": "#column" },
+        "down":  { "texture": "#column" },
+        "north": { "texture": "#column" },
+        "south": { "texture": "#column" },
+        "west":  { "texture": "#column" },
+        "east":  { "texture": "#column" }
+      }
+    },
+    {
+      "name": "top_slab",
+      "from": [2, 10, 2],
+      "to": [14, 14, 14],
+      "faces": {
+        "up":    { "texture": "#top" },
+        "down":  { "texture": "#top" },
+        "north": { "texture": "#top" },
+        "south": { "texture": "#top" },
+        "west":  { "texture": "#top" },
+        "east":  { "texture": "#top" }
+      }
+    }
+  ]
+}

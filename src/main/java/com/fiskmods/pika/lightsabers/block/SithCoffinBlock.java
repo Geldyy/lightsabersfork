@@ -33,116 +33,133 @@ import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
 public class SithCoffinBlock extends BaseEntityBlock {
-    public static final MapCodec<SithCoffinBlock> CODEC = simpleCodec(SithCoffinBlock::new);
-    public static final DirectionProperty FACING = HorizontalDirectionalBlock.FACING;
-    public static final EnumProperty<CoffinPart> PART = EnumProperty.create("part", CoffinPart.class);
+	public static final MapCodec<SithCoffinBlock> CODEC = simpleCodec(SithCoffinBlock::new);
+	public static final DirectionProperty FACING = HorizontalDirectionalBlock.FACING;
+	public static final EnumProperty<CoffinPart> PART = EnumProperty.create("part", CoffinPart.class);
 
-    // 15 Pixel Höhe (0.9375F) wie in Fisk func_149719_a[cite: 3]
-    private static final VoxelShape SHAPE = Block.box(0.0D, 0.0D, 0.0D, 16.0D, 15.0D, 16.0D);
+	private static final VoxelShape SHAPE = Block.box(0.0D, 0.0D, 0.0D, 16.0D, 15.0D, 16.0D);
 
-    public enum CoffinPart implements StringRepresentable {
-        FOOT("foot"),
-        HEAD("head");
+	public enum CoffinPart implements StringRepresentable {
+		FOOT("foot"), HEAD("head");
 
-        private final String name;
-        CoffinPart(String name) { this.name = name; }
-        @Override public String getSerializedName() { return this.name; }
-    }
+		private final String name;
 
-    public SithCoffinBlock(Properties properties) {
-        super(properties);
-        this.registerDefaultState(this.stateDefinition.any()
-                .setValue(FACING, Direction.NORTH)
-                .setValue(PART, CoffinPart.FOOT));
-    }
+		CoffinPart(String name) {
+			this.name = name;
+		}
 
-    @Override
-    protected MapCodec<? extends BaseEntityBlock> codec() {
-        return CODEC;
-    }
+		@Override
+		public String getSerializedName() {
+			return this.name;
+		}
+	}
 
-    @Override
-    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
-        builder.add(FACING, PART);
-    }
+	public SithCoffinBlock(Properties properties) {
+		super(properties);
+		this.registerDefaultState(
+				this.stateDefinition.any().setValue(FACING, Direction.NORTH).setValue(PART, CoffinPart.FOOT));
+	}
 
-    @Nullable
-    @Override
-    public BlockState getStateForPlacement(BlockPlaceContext context) {
-        // Kopfende erstreckt sich vom Spieler weg
-        Direction facing = context.getHorizontalDirection();
-        BlockPos pos = context.getClickedPos();
-        Level level = context.getLevel();
+	@Override
+	protected java.util.List<net.minecraft.world.item.ItemStack> getDrops(BlockState state,
+			net.minecraft.world.level.storage.loot.LootParams.Builder params) {
+		java.util.List<net.minecraft.world.item.ItemStack> drops = super.getDrops(state, params);
+		if (drops.isEmpty()) {
+			return java.util.Collections.singletonList(new net.minecraft.world.item.ItemStack(this));
+		}
+		return drops;
+	}
 
-        if (level.getBlockState(pos.relative(facing)).canBeReplaced(context)) {
-            return this.defaultBlockState().setValue(FACING, facing).setValue(PART, CoffinPart.FOOT);
-        }
-        return null;
-    }
+	@Override
+	protected MapCodec<? extends BaseEntityBlock> codec() {
+		return CODEC;
+	}
 
-    @Override
-    public void setPlacedBy(Level level, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack stack) {
-        super.setPlacedBy(level, pos, state, placer, stack);
-        if (!level.isClientSide()) {
-            Direction facing = state.getValue(FACING);
-            level.setBlock(pos.relative(facing), state.setValue(PART, CoffinPart.HEAD), 3);
-        }
-    }
+	@Override
+	protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
+		builder.add(FACING, PART);
+	}
 
-    public static BlockPos getBasePos(BlockPos pos, BlockState state) {
-        CoffinPart part = state.getValue(PART);
-        Direction facing = state.getValue(FACING);
-        return part == CoffinPart.FOOT ? pos : pos.relative(facing.getOpposite());
-    }
+	@Nullable
+	@Override
+	public BlockState getStateForPlacement(BlockPlaceContext context) {
+		Direction facing = context.getHorizontalDirection();
+		BlockPos pos = context.getClickedPos();
+		Level level = context.getLevel();
 
-    @Override
-    public VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
-        return SHAPE;
-    }
+		if (level.getBlockState(pos.relative(facing)).canBeReplaced(context)) {
+			return this.defaultBlockState().setValue(FACING, facing).setValue(PART, CoffinPart.FOOT);
+		}
+		return null;
+	}
 
-    @Override
-    public RenderShape getRenderShape(BlockState state) {
-        return state.getValue(PART) == CoffinPart.FOOT ? RenderShape.ENTITYBLOCK_ANIMATED : RenderShape.INVISIBLE;
-    }
+	@Override
+	public void setPlacedBy(Level level, BlockPos pos, BlockState state, @Nullable LivingEntity placer,
+			ItemStack stack) {
+		super.setPlacedBy(level, pos, state, placer, stack);
+		if (!level.isClientSide()) {
+			Direction facing = state.getValue(FACING);
+			level.setBlock(pos.relative(facing), state.setValue(PART, CoffinPart.HEAD), 3);
+		}
+	}
 
-    @Nullable
-    @Override
-    public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
-        return state.getValue(PART) == CoffinPart.FOOT ? new SithCoffinBlockEntity(pos, state) : null;
-    }
+	public static BlockPos getBasePos(BlockPos pos, BlockState state) {
+		CoffinPart part = state.getValue(PART);
+		Direction facing = state.getValue(FACING);
+		return part == CoffinPart.FOOT ? pos : pos.relative(facing.getOpposite());
+	}
 
-    @Nullable
-    @Override
-    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state, BlockEntityType<T> type) {
-        return state.getValue(PART) == CoffinPart.FOOT ? 
-            createTickerHelper(type, ALBlockEntities.SITH_COFFIN.get(), SithCoffinBlockEntity::tick) : null;
-    }
+	@Override
+	public VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
+		return SHAPE;
+	}
 
-    @Override
-    protected InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hitResult) {
-        if (!level.isClientSide()) {
-            BlockPos basePos = getBasePos(pos, state);
-            BlockEntity be = level.getBlockEntity(basePos);
-            if (be instanceof SithCoffinBlockEntity coffin) {
-                coffin.toggleLid();
-            }
-        }
-        return InteractionResult.sidedSuccess(level.isClientSide());
-    }
+	@Override
+	public RenderShape getRenderShape(BlockState state) {
+		return state.getValue(PART) == CoffinPart.FOOT ? RenderShape.ENTITYBLOCK_ANIMATED : RenderShape.INVISIBLE;
+	}
 
-    @Override
-    public BlockState playerWillDestroy(Level level, BlockPos pos, BlockState state, Player player) {
-        if (!level.isClientSide()) {
-            BlockPos basePos = getBasePos(pos, state);
-            Direction facing = state.getValue(FACING);
+	@Nullable
+	@Override
+	public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
+		return state.getValue(PART) == CoffinPart.FOOT ? new SithCoffinBlockEntity(pos, state) : null;
+	}
 
-            BlockPos otherPos = state.getValue(PART) == CoffinPart.FOOT ? basePos.relative(facing) : basePos;
-            BlockState otherState = level.getBlockState(otherPos);
-            if (otherState.is(this)) {
-                level.setBlock(otherPos, Blocks.AIR.defaultBlockState(), 35);
-                level.levelEvent(player, 2001, otherPos, Block.getId(otherState));
-            }
-        }
-        return super.playerWillDestroy(level, pos, state, player);
-    }
+	@Nullable
+	@Override
+	public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state,
+			BlockEntityType<T> type) {
+		return state.getValue(PART) == CoffinPart.FOOT
+				? createTickerHelper(type, ALBlockEntities.SITH_COFFIN.get(), SithCoffinBlockEntity::tick)
+				: null;
+	}
+
+	@Override
+	protected InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player,
+			BlockHitResult hitResult) {
+		if (!level.isClientSide()) {
+			BlockPos basePos = getBasePos(pos, state);
+			BlockEntity be = level.getBlockEntity(basePos);
+			if (be instanceof SithCoffinBlockEntity coffin) {
+				coffin.toggleLid();
+			}
+		}
+		return InteractionResult.sidedSuccess(level.isClientSide());
+	}
+
+	@Override
+	public BlockState playerWillDestroy(Level level, BlockPos pos, BlockState state, Player player) {
+		if (!level.isClientSide()) {
+			BlockPos basePos = getBasePos(pos, state);
+			Direction facing = state.getValue(FACING);
+
+			BlockPos otherPos = state.getValue(PART) == CoffinPart.FOOT ? basePos.relative(facing) : basePos;
+			BlockState otherState = level.getBlockState(otherPos);
+			if (otherState.is(this)) {
+				level.setBlock(otherPos, Blocks.AIR.defaultBlockState(), 35);
+				level.levelEvent(player, 2001, otherPos, Block.getId(otherState));
+			}
+		}
+		return super.playerWillDestroy(level, pos, state, player);
+	}
 }

@@ -160,5 +160,17 @@
       "lightsabersfork:mob/sith_ghost/idle2",
       "lightsabersfork:mob/sith_ghost/idle3"
     ]
-  }
+  },
+  "block.sith_sarcophagus.open": {
+      "subtitle": "subtitles.block.sith_sarcophagus.open",
+      "sounds": [
+        "lightsabersfork:block/sith_sarcophagus/open"
+      ]
+    },
+    "block.sith_sarcophagus.close": {
+      "subtitle": "subtitles.block.sith_sarcophagus.close",
+      "sounds": [
+        "lightsabersfork:block/sith_sarcophagus/open"
+      ]
+    }
 }

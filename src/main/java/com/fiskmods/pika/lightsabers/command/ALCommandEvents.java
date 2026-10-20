@@ -9,8 +9,8 @@ import net.neoforged.neoforge.event.RegisterCommandsEvent;
 @EventBusSubscriber(modid = AdvancedLightsabers.MODID)
 public class ALCommandEvents {
 
-    @SubscribeEvent
-    public static void onRegisterCommands(RegisterCommandsEvent event) {
-        ALDebugCommand.register(event.getDispatcher());
-    }
+	@SubscribeEvent
+	public static void onRegisterCommands(RegisterCommandsEvent event) {
+		ALDebugCommand.register(event.getDispatcher());
+	}
 }

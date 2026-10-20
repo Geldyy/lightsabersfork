@@ -1,0 +1,50 @@
+{
+  "customGroups": [
+    {
+      "name": "lightsabers",
+      "items": [
+        "lightsabersfork:lightsaber"
+      ]
+    }
+  ],
+  "itemSpecific": {
+    "lightsabersfork:lightsaber": {
+      "kind": "SWORD",
+      "armKind": "SWORD",
+      "disable_sprint_lateral_tilt": true,
+      "transforms": {
+        "right": {
+          "scale": 0.9377683,
+          "offX": -0.07725322,
+          "offY": 0.10721016,
+          "offZ": 0.098712444,
+          "rotX": -19.849792,
+          "rotY": 0.386261,
+          "rotZ": 0.6008606,
+          "pivotX": -0.002145946,
+          "pivotY": -0.0042918324,
+          "pivotZ": -0.03433478,
+          "physics": "FORWARD_PENDULUM"
+        },
+        "left": {
+          "scale": 0.9377683,
+          "offX": 0.07725322,
+          "offY": 0.10721016,
+          "offZ": 0.098712444,
+          "rotX": -19.849792,
+          "rotY": -0.386261,
+          "rotZ": -0.6008606,
+          "pivotX": 0.002145946,
+          "pivotY": -0.0042918324,
+          "pivotZ": -0.03433478,
+          "physics": "FORWARD_PENDULUM"
+        }
+      },
+      "physics": {
+        "name": "FORWARD_PENDULUM",
+        "limitDeg": 20.0,
+        "speed": 1.15
+      }
+    }
+  }
+}

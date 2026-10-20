@@ -42,7 +42,6 @@ public class LightsaberStandRenderer implements BlockEntityRenderer<LightsaberSt
 
         poseStack.pushPose();
         
-        // 1. Block-Zentrierung & Ausrichtung (Stand-Matrix)
         poseStack.translate(0.5D, 1.5D, 0.5D);
         poseStack.mulPose(Axis.YP.rotationDegrees(facing.toYRot()));
         poseStack.mulPose(Axis.XP.rotationDegrees(180.0F));
@@ -59,7 +58,6 @@ public class LightsaberStandRenderer implements BlockEntityRenderer<LightsaberSt
                 boolean isDoubleBladed = data.isDoubleBladed();
                 
                 if (isDoubleBladed) {
-                    // --- DOPPELLICHTSCHWERT ---
                     float upperGripH = getPartHeight(data.grip(), PartType.BODY, 16.0F);
                     float upperSwitchH = getPartHeight(data.switchSection(), PartType.SWITCH_SECTION, 8.8F);
                     float upperEmitterH = getPartHeight(data.emitter(), PartType.EMITTER, 16.0F);
@@ -72,42 +70,33 @@ public class LightsaberStandRenderer implements BlockEntityRenderer<LightsaberSt
 
                     standOffset = 0.0F;
 
-                    // Schwerpunktversatz bei asymmetrischen Doppelklingen
                     centerOffsetWorld = (upperH - lowerH) * 0.0625F * 0.185F * 0.5F;
                 } else {
-                    // --- EINZELLICHTSCHWERT ---
                     float pommelH = getPartHeight(data.pommel(), PartType.POMMEL, 1.0F);
                     float gripH = getPartHeight(data.grip(), PartType.BODY, 16.0F);
                     float switchH = getPartHeight(data.switchSection(), PartType.SWITCH_SECTION, 8.8F);
                     float emitterH = getPartHeight(data.emitter(), PartType.EMITTER, 16.0F);
                     float totalH = pommelH + gripH + switchH + emitterH;
 
-                    // Fisk-Originalformel: Halterungen bei kurzen Klingen zusammenziehen
                     float lengthCm = totalH * 0.575F;
                     float f = Math.min(lengthCm - 25.0F, 0.0F) * 0.2F;
                     standOffset = Math.max(f, -2.5F);
 
-                    // Schwerpunkt: Exakt die halbe Gesamtlänge in Welt-Blöcken
                     centerOffsetWorld = totalH * 0.0625F * 0.185F * 0.5F;
                 }
             }
         }
 
-        // 2. Ständer-Modell rendern
         VertexConsumer vertexConsumer = bufferSource.getBuffer(RenderType.entityCutoutNoCull(TEXTURE));
         this.model.renderStand(poseStack, vertexConsumer, packedLight, OverlayTexture.NO_OVERLAY, standOffset);
 
-        // 3. Lichtschwert exakt in der Stand-Mulde platzieren
         if (hasSaber) {
             poseStack.pushPose();
             
-            // Auflagepunkt in der Keil-Mulde (1.365D nach unten)
             poseStack.translate(0.0D, 1.365D, 0.0D);
             
-            // Horizontal um 90° drehen (damit es quer auf den Haltern liegt)
             poseStack.mulPose(Axis.ZP.rotationDegrees(90.0F));
 
-            // Entlang der Schwertachse um den exakten Schwerpunkt verschieben
             poseStack.translate(0.0D, -centerOffsetWorld, 0.0D);
 
             Minecraft.getInstance().getItemRenderer().renderStatic(

@@ -1,0 +1,15 @@
+{
+  "name": "lightsabersfork:gathering/chamber",
+  "fallback": "minecraft:empty",
+  "elements": [
+    {
+      "weight": 1,
+      "element": {
+        "element_type": "minecraft:single_pool_element",
+        "location": "lightsabersfork:gathering/mirror_chamber",
+        "projection": "rigid",
+        "processors": "minecraft:empty"
+      }
+    }
+  ]
+}

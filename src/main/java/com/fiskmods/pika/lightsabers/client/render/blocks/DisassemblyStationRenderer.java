@@ -34,21 +34,16 @@ public class DisassemblyStationRenderer implements BlockEntityRenderer<Disassemb
 
         poseStack.pushPose();
 
-        // 1. Zentrierung am Basis-Block (Bottom-Left)
         poseStack.translate(0.5D, 1.5D, 0.5D);
         
-        // 2. Exakte Drehung zum Spieler (-facing.toYRot() richtet die Vorderseite zum Spieler aus)
         poseStack.mulPose(Axis.YP.rotationDegrees(-facing.toYRot()));
         poseStack.mulPose(Axis.XP.rotationDegrees(180.0F));
 
-        // 3. Modellmitte um 0.5 Blöcke nach rechts verschieben (deckt exakt beide Blöcke ab)
         poseStack.translate(0.5D, 0.0D, 0.0D);
 
-        // 4. Pass 1: Basiskorpus
         VertexConsumer baseConsumer = bufferSource.getBuffer(RenderType.entityCutoutNoCull(TEXTURE));
         this.model.renderToBuffer(poseStack, baseConsumer, packedLight, OverlayTexture.NO_OVERLAY, 0xFFFFFFFF);
 
-        // 5. Pass 2: Leucht-Layer (Displays & LEDs)
         VertexConsumer glowConsumer = bufferSource.getBuffer(RenderType.entityTranslucent(TEXTURE_LIGHTS));
         this.model.renderToBuffer(poseStack, glowConsumer, 15728880, OverlayTexture.NO_OVERLAY, 0xFFFFFFFF);
 

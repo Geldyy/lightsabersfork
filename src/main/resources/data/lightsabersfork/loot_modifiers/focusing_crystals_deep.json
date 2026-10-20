@@ -1,0 +1,21 @@
+{
+  "type": "lightsabersfork:add_loot",
+  "conditions": [
+    {
+      "condition": "neoforge:loot_table_id",
+      "loot_table_id": "minecraft:chests/abandoned_mineshaft"
+    }
+  ],
+  "items": [
+    "lightsabersfork:focusing_crystal_pulse",
+    "lightsabersfork:focusing_crystal_compressed",
+    "lightsabersfork:focusing_crystal_cracked",
+    "lightsabersfork:focusing_crystal_inverting",
+    "lightsabersfork:focusing_crystal_fine_cut",
+    "lightsabersfork:focusing_crystal_prismatic"
+  ],
+  "chance": 0.35,
+  "min_count": 1,
+  "max_count": 1,
+  "pick_random_one": true
+}

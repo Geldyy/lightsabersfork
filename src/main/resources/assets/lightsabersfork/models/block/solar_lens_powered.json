@@ -1,0 +1,49 @@
+{
+  "ambientocclusion": true,
+  "textures": {
+    "particle": "minecraft:block/beacon",
+    "base": "lightsabersfork:block/light_forcestone_pillar_top",
+    "crystal": "minecraft:block/beacon",
+    "rim": "minecraft:block/gold_block"
+  },
+  "elements": [
+    {
+      "name": "base",
+      "from": [2, 0, 2],
+      "to": [14, 3, 14],
+      "faces": {
+        "down":  { "texture": "#base", "cullface": "down" },
+        "up":    { "texture": "#base" },
+        "north": { "texture": "#base" },
+        "south": { "texture": "#base" },
+        "west":  { "texture": "#base" },
+        "east":  { "texture": "#base" }
+      }
+    },
+    {
+      "name": "ring",
+      "from": [3, 3, 3],
+      "to": [13, 5, 13],
+      "faces": {
+        "up":    { "texture": "#rim" },
+        "north": { "texture": "#rim" },
+        "south": { "texture": "#rim" },
+        "west":  { "texture": "#rim" },
+        "east":  { "texture": "#rim" }
+      }
+    },
+    {
+      "name": "lens",
+      "from": [4, 5, 4],
+      "to": [12, 12, 12],
+      "faces": {
+        "up":    { "texture": "#crystal" },
+        "down":  { "texture": "#crystal" },
+        "north": { "texture": "#crystal" },
+        "south": { "texture": "#crystal" },
+        "west":  { "texture": "#crystal" },
+        "east":  { "texture": "#crystal" }
+      }
+    }
+  ]
+}

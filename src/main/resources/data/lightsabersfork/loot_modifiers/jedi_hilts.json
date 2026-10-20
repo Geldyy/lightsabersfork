@@ -1,0 +1,27 @@
+{
+  "type": "lightsabersfork:add_loot",
+  "conditions": [
+    {
+      "condition": "neoforge:loot_table_id",
+      "loot_table_id": "minecraft:chests/stronghold_corridor"
+    }
+  ],
+  "items": [
+    "lightsabersfork:graflex_emitter",
+    "lightsabersfork:graflex_switch_module",
+    "lightsabersfork:graflex_grip",
+    "lightsabersfork:graflex_pommel",
+    "lightsabersfork:redeemer_emitter",
+    "lightsabersfork:redeemer_switch_module",
+    "lightsabersfork:redeemer_grip",
+    "lightsabersfork:redeemer_pommel",
+    "lightsabersfork:prodigal_son_emitter",
+    "lightsabersfork:prodigal_son_switch_module",
+    "lightsabersfork:prodigal_son_grip",
+    "lightsabersfork:prodigal_son_pommel"
+  ],
+  "chance": 0.40,
+  "min_count": 1,
+  "max_count": 1,
+  "pick_random_one": true
+}

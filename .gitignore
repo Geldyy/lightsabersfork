@@ -52,3 +52,6 @@ replay_pid*
 Thumbs.db
 ehthumbs.db
 [Dd]esktop.ini
+
+### Scratch & Temporary ###
+scratch/

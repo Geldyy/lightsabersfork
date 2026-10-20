@@ -68,13 +68,11 @@ public class DisassemblyStationBlock extends BaseEntityBlock {
     @Nullable
     @Override
     public BlockState getStateForPlacement(BlockPlaceContext context) {
-        // Der Block schaut in Richtung des Spielers
         Direction facing = context.getHorizontalDirection().getOpposite();
-        Direction right = facing.getCounterClockWise(); // Rechte Seite aus Spieler-Blickwinkel
+        Direction right = facing.getCounterClockWise();
         BlockPos pos = context.getClickedPos();
         Level level = context.getLevel();
 
-        // Prüfen, ob alle 4 Blöcke im 2x1x2-Raster frei sind
         if (level.getBlockState(pos.relative(right)).canBeReplaced(context) &&
             level.getBlockState(pos.above()).canBeReplaced(context) &&
             level.getBlockState(pos.relative(right).above()).canBeReplaced(context)) {

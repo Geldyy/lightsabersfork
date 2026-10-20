@@ -33,7 +33,7 @@ public class SithCoffinBlockEntity extends BlockEntity {
         be.prevOpenTimer = be.openTimer;
 
         if (be.isOpen && be.openTimer < 1.0F) {
-            be.openTimer = Math.min(1.0F, be.openTimer + 0.033F); // ~30 Ticks für sanfte Öffnung
+            be.openTimer = Math.min(1.0F, be.openTimer + 0.033F);
         } else if (!be.isOpen && be.openTimer > 0.0F) {
             be.openTimer = Math.max(0.0F, be.openTimer - 0.033F);
         }

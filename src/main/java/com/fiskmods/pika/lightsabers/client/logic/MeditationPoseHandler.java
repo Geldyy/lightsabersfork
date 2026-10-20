@@ -14,10 +14,9 @@ public class MeditationPoseHandler {
     @SubscribeEvent
     public static void onRenderPlayerPre(RenderPlayerEvent.Pre event) {
         Player player = event.getEntity();
-        if (MeditationStateManager.isMeditating() && player.equals(Minecraft.getInstance().player)) {
+        if (MeditationClientTracker.isPlayerMeditating(player) && MeditationClientTracker.isPlayerFloating(player)) {
             event.getPoseStack().pushPose();
             
-            // Ein leichtes, atmosphärisches Schweben (Sinus-Welle) zusätzlich zur physischen Fixierung
             float floatTime = player.tickCount + event.getPartialTick();
             double hoverAnimation = Math.sin(floatTime * 0.05D) * 0.05D;
             
@@ -25,11 +24,10 @@ public class MeditationPoseHandler {
         }
     }
 
-    // NEU: Wichtig, damit das Spiel weiß, dass unsere Render-Verschiebungen für diesen Frame abgeschlossen sind
     @SubscribeEvent
     public static void onRenderPlayerPost(RenderPlayerEvent.Post event) {
         Player player = event.getEntity();
-        if (MeditationStateManager.isMeditating() && player.equals(Minecraft.getInstance().player)) {
+        if (MeditationClientTracker.isPlayerMeditating(player) && MeditationClientTracker.isPlayerFloating(player)) {
             event.getPoseStack().popPose();
         }
     }

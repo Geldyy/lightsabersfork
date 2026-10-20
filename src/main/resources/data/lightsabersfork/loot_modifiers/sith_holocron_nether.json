@@ -1,0 +1,16 @@
+{
+  "type": "lightsabersfork:add_loot",
+  "conditions": [
+    {
+      "condition": "neoforge:loot_table_id",
+      "loot_table_id": "minecraft:chests/nether_bridge"
+    }
+  ],
+  "items": [
+    "lightsabersfork:sith_holocron"
+  ],
+  "chance": 0.20,
+  "min_count": 1,
+  "max_count": 1,
+  "pick_random_one": true
+}

@@ -34,14 +34,11 @@ public class SithCoffinRenderer implements BlockEntityRenderer<SithCoffinBlockEn
 
         poseStack.pushPose();
 
-        // 1. Zentrierung am Basis-Block (FOOT)
         poseStack.translate(0.5D, 1.5D, 0.5D);
 
-        // 2. 1:1 Fisk Ausrichtung entlang des 2-Block-Verbunds
         poseStack.mulPose(Axis.YP.rotationDegrees(-facing.toYRot() + 180.0F));
         poseStack.mulPose(Axis.XP.rotationDegrees(180.0F));
 
-        // 3. Originalanimation anwenden
         this.model.setupAnim(progress);
 
         VertexConsumer consumer = buffer.getBuffer(RenderType.entityCutoutNoCull(TEXTURE));

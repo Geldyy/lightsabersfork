@@ -1,0 +1,34 @@
+{
+  "parent": "lightsabersfork:lightsabers/first_lightsaber",
+  "display": {
+    "icon": {
+      "id": "lightsabersfork:juggernaut_emitter"
+    },
+    "title": {
+      "translate": "advancements.lightsabersfork.combat_master.title"
+    },
+    "description": {
+      "translate": "advancements.lightsabersfork.combat_master.desc"
+    },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": true
+  },
+  "rewards": {
+    "experience": 250
+  },
+  "criteria": {
+    "kill_with_saber": {
+      "trigger": "minecraft:player_killed_entity",
+      "conditions": {
+        "player": {
+          "equipment": {
+            "mainhand": {
+              "items": "lightsabersfork:lightsaber"
+            }
+          }
+        }
+      }
+    }
+  }
+}

@@ -31,130 +31,146 @@ import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
 public class LightsaberForgeBlock extends BaseEntityBlock {
-    public static final MapCodec<LightsaberForgeBlock> CODEC = simpleCodec(LightsaberForgeBlock::new);
-    public static final DirectionProperty FACING = HorizontalDirectionalBlock.FACING;
-    public static final EnumProperty<ForgePart> PART = EnumProperty.create("part", ForgePart.class);
+	public static final MapCodec<LightsaberForgeBlock> CODEC = simpleCodec(LightsaberForgeBlock::new);
+	public static final DirectionProperty FACING = HorizontalDirectionalBlock.FACING;
+	public static final EnumProperty<ForgePart> PART = EnumProperty.create("part", ForgePart.class);
 
-    // Fisks originale Tischhöhe: 13 Pixel (0.8125 Blöcke)
-    private static final VoxelShape SHAPE = Block.box(0.0D, 0.0D, 0.0D, 16.0D, 13.0D, 16.0D);
+	private static final VoxelShape SHAPE = Block.box(0.0D, 0.0D, 0.0D, 16.0D, 13.0D, 16.0D);
 
-    public enum ForgePart implements StringRepresentable {
-        LEFT("left"),
-        RIGHT("right");
+	public enum ForgePart implements StringRepresentable {
+		LEFT("left"), RIGHT("right");
 
-        private final String name;
-        ForgePart(String name) { this.name = name; }
-        @Override public String getSerializedName() { return this.name; }
-    }
+		private final String name;
 
-    public LightsaberForgeBlock(Properties properties) {
-        super(properties);
-        this.registerDefaultState(this.stateDefinition.any()
-                .setValue(FACING, Direction.NORTH)
-                .setValue(PART, ForgePart.LEFT));
-    }
+		ForgePart(String name) {
+			this.name = name;
+		}
 
-    @Override
-    protected MapCodec<? extends BaseEntityBlock> codec() {
-        return CODEC;
-    }
+		@Override
+		public String getSerializedName() {
+			return this.name;
+		}
+	}
 
-    @Override
-    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
-        builder.add(FACING, PART);
-    }
+	public LightsaberForgeBlock(Properties properties) {
+		super(properties);
+		this.registerDefaultState(
+				this.stateDefinition.any().setValue(FACING, Direction.NORTH).setValue(PART, ForgePart.LEFT));
+	}
 
-    public static Direction getRightDirection(Direction facing) {
-        return facing.getCounterClockWise();
-    }
+	@Override
+	protected MapCodec<? extends BaseEntityBlock> codec() {
+		return CODEC;
+	}
 
-    @Nullable
-    @Override
-    public BlockState getStateForPlacement(BlockPlaceContext context) {
-        Direction facing = context.getHorizontalDirection().getOpposite();
-        Direction right = getRightDirection(facing);
-        BlockPos pos = context.getClickedPos();
-        Level level = context.getLevel();
+	@Override
+	protected java.util.List<net.minecraft.world.item.ItemStack> getDrops(BlockState state,
+			net.minecraft.world.level.storage.loot.LootParams.Builder params) {
+		java.util.List<net.minecraft.world.item.ItemStack> drops = super.getDrops(state, params);
+		if (drops.isEmpty()) {
+			return java.util.Collections.singletonList(new net.minecraft.world.item.ItemStack(this));
+		}
+		return drops;
+	}
 
-        if (level.getBlockState(pos.relative(right)).canBeReplaced(context)) {
-            return this.defaultBlockState().setValue(FACING, facing).setValue(PART, ForgePart.LEFT);
-        }
-        return null;
-    }
+	@Override
+	protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
+		builder.add(FACING, PART);
+	}
 
-    @Override
-    public void setPlacedBy(Level level, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack stack) {
-        super.setPlacedBy(level, pos, state, placer, stack);
-        if (!level.isClientSide()) {
-            Direction facing = state.getValue(FACING);
-            Direction right = getRightDirection(facing);
-            level.setBlock(pos.relative(right), state.setValue(PART, ForgePart.RIGHT), 3);
-        }
-    }
+	public static Direction getRightDirection(Direction facing) {
+		return facing.getCounterClockWise();
+	}
 
-    public static BlockPos getBasePos(BlockPos pos, BlockState state) {
-        ForgePart part = state.getValue(PART);
-        Direction facing = state.getValue(FACING);
-        Direction left = getRightDirection(facing).getOpposite();
-        return part == ForgePart.LEFT ? pos : pos.relative(left);
-    }
+	@Nullable
+	@Override
+	public BlockState getStateForPlacement(BlockPlaceContext context) {
+		Direction facing = context.getHorizontalDirection().getOpposite();
+		Direction right = getRightDirection(facing);
+		BlockPos pos = context.getClickedPos();
+		Level level = context.getLevel();
 
-    @Override
-    public VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
-        return SHAPE;
-    }
+		if (level.getBlockState(pos.relative(right)).canBeReplaced(context)) {
+			return this.defaultBlockState().setValue(FACING, facing).setValue(PART, ForgePart.LEFT);
+		}
+		return null;
+	}
 
-    @Override
-    public RenderShape getRenderShape(BlockState state) {
-        return state.getValue(PART) == ForgePart.LEFT ? RenderShape.ENTITYBLOCK_ANIMATED : RenderShape.INVISIBLE;
-    }
+	@Override
+	public void setPlacedBy(Level level, BlockPos pos, BlockState state, @Nullable LivingEntity placer,
+			ItemStack stack) {
+		super.setPlacedBy(level, pos, state, placer, stack);
+		if (!level.isClientSide()) {
+			Direction facing = state.getValue(FACING);
+			Direction right = getRightDirection(facing);
+			level.setBlock(pos.relative(right), state.setValue(PART, ForgePart.RIGHT), 3);
+		}
+	}
 
-    @Nullable
-    @Override
-    public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
-        return state.getValue(PART) == ForgePart.LEFT ? new LightsaberForgeBlockEntity(pos, state) : null;
-    }
+	public static BlockPos getBasePos(BlockPos pos, BlockState state) {
+		ForgePart part = state.getValue(PART);
+		Direction facing = state.getValue(FACING);
+		Direction left = getRightDirection(facing).getOpposite();
+		return part == ForgePart.LEFT ? pos : pos.relative(left);
+	}
 
-    @Override
-    protected InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hitResult) {
-        if (!level.isClientSide()) {
-            BlockPos basePos = getBasePos(pos, state);
-            BlockEntity be = level.getBlockEntity(basePos);
-            if (be instanceof LightsaberForgeBlockEntity forge) {
-                player.openMenu(forge, basePos);
-            }
-        }
-        return InteractionResult.sidedSuccess(level.isClientSide());
-    }
+	@Override
+	public VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
+		return SHAPE;
+	}
 
-    @Override
-    public BlockState playerWillDestroy(Level level, BlockPos pos, BlockState state, Player player) {
-        if (!level.isClientSide()) {
-            BlockPos basePos = getBasePos(pos, state);
-            Direction facing = state.getValue(FACING);
-            Direction right = getRightDirection(facing);
+	@Override
+	public RenderShape getRenderShape(BlockState state) {
+		return state.getValue(PART) == ForgePart.LEFT ? RenderShape.ENTITYBLOCK_ANIMATED : RenderShape.INVISIBLE;
+	}
 
-            BlockPos otherPos = state.getValue(PART) == ForgePart.LEFT ? basePos.relative(right) : basePos;
-            BlockState otherState = level.getBlockState(otherPos);
-            if (otherState.is(this)) {
-                level.setBlock(otherPos, Blocks.AIR.defaultBlockState(), 35);
-                level.levelEvent(player, 2001, otherPos, Block.getId(otherState));
-            }
-        }
-        return super.playerWillDestroy(level, pos, state, player);
-    }
+	@Nullable
+	@Override
+	public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
+		return state.getValue(PART) == ForgePart.LEFT ? new LightsaberForgeBlockEntity(pos, state) : null;
+	}
 
-    @Override
-    public void onRemove(BlockState state, Level level, BlockPos pos, BlockState newState, boolean isMoving) {
-        if (!state.is(newState.getBlock())) {
-            if (state.getValue(PART) == ForgePart.LEFT) {
-                BlockEntity be = level.getBlockEntity(pos);
-                if (be instanceof LightsaberForgeBlockEntity forge) {
-                    Containers.dropContents(level, pos, forge.getInventoryAsList());
-                    level.updateNeighbourForOutputSignal(pos, this);
-                }
-            }
-            super.onRemove(state, level, pos, newState, isMoving);
-        }
-    }
+	@Override
+	protected InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player,
+			BlockHitResult hitResult) {
+		if (!level.isClientSide()) {
+			BlockPos basePos = getBasePos(pos, state);
+			BlockEntity be = level.getBlockEntity(basePos);
+			if (be instanceof LightsaberForgeBlockEntity forge) {
+				player.openMenu(forge, basePos);
+			}
+		}
+		return InteractionResult.sidedSuccess(level.isClientSide());
+	}
+
+	@Override
+	public BlockState playerWillDestroy(Level level, BlockPos pos, BlockState state, Player player) {
+		if (!level.isClientSide()) {
+			BlockPos basePos = getBasePos(pos, state);
+			Direction facing = state.getValue(FACING);
+			Direction right = getRightDirection(facing);
+
+			BlockPos otherPos = state.getValue(PART) == ForgePart.LEFT ? basePos.relative(right) : basePos;
+			BlockState otherState = level.getBlockState(otherPos);
+			if (otherState.is(this)) {
+				level.setBlock(otherPos, Blocks.AIR.defaultBlockState(), 35);
+				level.levelEvent(player, 2001, otherPos, Block.getId(otherState));
+			}
+		}
+		return super.playerWillDestroy(level, pos, state, player);
+	}
+
+	@Override
+	public void onRemove(BlockState state, Level level, BlockPos pos, BlockState newState, boolean isMoving) {
+		if (!state.is(newState.getBlock())) {
+			if (state.getValue(PART) == ForgePart.LEFT) {
+				BlockEntity be = level.getBlockEntity(pos);
+				if (be instanceof LightsaberForgeBlockEntity forge) {
+					Containers.dropContents(level, pos, forge.getInventoryAsList());
+					level.updateNeighbourForOutputSignal(pos, this);
+				}
+			}
+			super.onRemove(state, level, pos, newState, isMoving);
+		}
+	}
 }

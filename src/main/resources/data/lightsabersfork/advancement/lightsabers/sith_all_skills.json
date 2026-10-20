@@ -1,0 +1,25 @@
+{
+  "parent": "lightsabersfork:lightsabers/sith_first_step",
+  "display": {
+    "icon": {
+      "id": "lightsabersfork:red_crystal"
+    },
+    "title": {
+      "translate": "advancements.lightsabersfork.sith_all_skills.title"
+    },
+    "description": {
+      "translate": "advancements.lightsabersfork.sith_all_skills.desc"
+    },
+    "frame": "goal",
+    "show_toast": true,
+    "announce_to_chat": true
+  },
+  "rewards": {
+    "experience": 1500
+  },
+  "criteria": {
+    "unlocked": {
+      "trigger": "minecraft:impossible"
+    }
+  }
+}

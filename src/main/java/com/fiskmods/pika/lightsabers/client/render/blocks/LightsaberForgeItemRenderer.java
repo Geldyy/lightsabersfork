@@ -62,7 +62,7 @@ public class LightsaberForgeItemRenderer extends BlockEntityWithoutLevelRenderer
                 poseStack.translate(-0.15F, -0.6F, 0.0F);
                 poseStack.scale(0.25F, 0.25F, 0.25F);
             }
-            default -> { // FIXED
+            default -> { 
                 poseStack.translate(0.5F, 0.5F, 0.5F);
                 poseStack.mulPose(Axis.XP.rotationDegrees(180.0F));
                 poseStack.translate(-0.15F, -0.6F, 0.0F);

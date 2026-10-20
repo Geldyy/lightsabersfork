@@ -62,7 +62,6 @@ public class HolocronRenderer implements BlockEntityRenderer<HolocronBlockEntity
         poseStack.pushPose();
         poseStack.translate(0.0F, size / 2.0F + (size / 2.0F + f1) * f, 0.0F);
 
-        // --- 1. Pass: Seitenflächen ---
         VertexConsumer sideConsumer = bufferSource.getBuffer(RenderType.entityCutout(JEDI_SIDE));
         for (int i = 0; i < 6; i++) {
             poseStack.pushPose();
@@ -81,7 +80,6 @@ public class HolocronRenderer implements BlockEntityRenderer<HolocronBlockEntity
             poseStack.popPose();
         }
 
-        // --- 2. Pass: Äußere Ecken ---
         VertexConsumer cornerConsumer = bufferSource.getBuffer(RenderType.entityCutout(JEDI_CORNER));
         for (int i = 0; i < 2; i++) {
             for (int j = 0; j < 4; j++) {
@@ -103,7 +101,6 @@ public class HolocronRenderer implements BlockEntityRenderer<HolocronBlockEntity
             }
         }
 
-        // --- 3. Pass: Innere Böden ---
         VertexConsumer cornerBottomConsumer = bufferSource.getBuffer(RenderType.entityCutout(JEDI_CORNER_BOTTOM));
         for (int i = 0; i < 2; i++) {
             for (int j = 0; j < 4; j++) {
@@ -128,7 +125,6 @@ public class HolocronRenderer implements BlockEntityRenderer<HolocronBlockEntity
             }
         }
 
-        // --- 4. Pass: Innere Seitenflächen ---
         VertexConsumer cornerSideConsumer = bufferSource.getBuffer(RenderType.entityCutout(JEDI_CORNER_SIDE));
         for (int i = 0; i < 2; i++) {
             for (int j = 0; j < 4; j++) {
@@ -145,7 +141,7 @@ public class HolocronRenderer implements BlockEntityRenderer<HolocronBlockEntity
                             0.0F, 0.0F, height, 1.0F, 0.0F,
                             -width / 2.0F, -width1 / 3.0F, 0.0F, 1.0F, 1.0F);
 
-                    // KORRIGIERTE UV-KOORDINATEN (Zweites Dreieck)
+                    
                     addTriangle(poseStack, cornerSideConsumer, glowLight, overlay,
                             0.0F, -width1 / 3.0F, 0.0F, 0.5F, 1.0F,
                             width / 2.0F, -width1 / 3.0F, 0.0F, 0.0F, 1.0F,
@@ -190,7 +186,7 @@ public class HolocronRenderer implements BlockEntityRenderer<HolocronBlockEntity
                     -size / 2.0F, -size / 2.0F, -size / 2.0F, 1.0F, 1.0F,
                     0.0F, size / 2.0F, 0.0F, 1.0F, 0.0F);
 
-            // Innenseite
+            
             addTriangle(poseStack, sideConsumer, glowLight, overlay,
                     0.0F, size / 2.0F, 0.0F, 0.0F, 0.0F,
                     0.0F, -size / 2.0F, -size / 2.0F, 0.5F, 1.0F,

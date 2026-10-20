@@ -1,0 +1,32 @@
+{
+  "parent": "lightsabersfork:lightsabers/craft_circuitry",
+  "display": {
+    "icon": {
+      "id": "lightsabersfork:lightsaber_forge_light"
+    },
+    "title": {
+      "translate": "advancements.lightsabersfork.craft_forge.title"
+    },
+    "description": {
+      "translate": "advancements.lightsabersfork.craft_forge.desc"
+    },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": true
+  },
+  "rewards": {
+    "experience": 300
+  },
+  "criteria": {
+    "has_forge": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": "lightsabersfork:lightsaber_forge_light"
+          }
+        ]
+      }
+    }
+  }
+}

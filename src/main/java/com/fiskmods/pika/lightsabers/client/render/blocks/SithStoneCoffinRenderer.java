@@ -30,15 +30,12 @@ public class SithStoneCoffinRenderer implements BlockEntityRenderer<SithStoneCof
         Direction facing = be.getBlockState().getOptionalValue(SithStoneCoffinBlock.FACING).orElse(Direction.NORTH);
 
         poseStack.pushPose();
-
-        // 1. Zentrierung am unteren Block
+        
         poseStack.translate(0.5D, 1.5D, 0.5D);
 
-        // 2. 1:1 Fisk Ausrichtung & Umkehrung
         poseStack.mulPose(Axis.YP.rotationDegrees(-facing.toYRot()));
         poseStack.mulPose(Axis.XP.rotationDegrees(180.0F));
 
-        // 3. Zeichnen
         VertexConsumer consumer = buffer.getBuffer(RenderType.entityCutoutNoCull(TEXTURE));
         this.model.render(poseStack, consumer, packedLight, OverlayTexture.NO_OVERLAY, be.baseplateOnly);
 

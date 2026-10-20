@@ -9,7 +9,7 @@
   "key": {
     "L": { "item": "minecraft:leather" },
     "S": { "item": "minecraft:string" },
-    "C": { "item": "lightsabersfork:green_crystal" }
+    "C": { "tag": "lightsabersfork:crystals" }
   },
   "result": {
     "count": 1,

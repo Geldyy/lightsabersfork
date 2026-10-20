@@ -11,50 +11,48 @@ import net.minecraft.world.item.ItemStack;
 
 public class MovingSoundHum extends AbstractTickableSoundInstance {
 
-    private final LivingEntity entity;
-    private final Runnable onStopCallback;
+	private final LivingEntity entity;
+	private final Runnable onStopCallback;
 
-    public MovingSoundHum(LivingEntity entity, Runnable onStopCallback) {
-    	super(ALSounds.LIGHTSABER_HUM_MEDIUM.get(), SoundSource.PLAYERS, SoundInstance.createUnseededRandom());
-        this.entity = entity;
-        this.onStopCallback = onStopCallback;
-        this.looping = true;
-        this.delay = 0;
-        this.volume = 0.35F;
-        this.pitch = 1.0F;
-        this.x = entity.getX();
-        this.y = entity.getY();
-        this.z = entity.getZ();
-    }
+	public MovingSoundHum(LivingEntity entity, Runnable onStopCallback) {
+		super(ALSounds.LIGHTSABER_HUM_MEDIUM.get(), SoundSource.PLAYERS, SoundInstance.createUnseededRandom());
+		this.entity = entity;
+		this.onStopCallback = onStopCallback;
+		this.looping = true;
+		this.delay = 0;
+		this.volume = 0.35F;
+		this.pitch = 1.0F;
+		this.x = entity.getX();
+		this.y = entity.getY();
+		this.z = entity.getZ();
+	}
 
-    @Override
-    public void tick() {
-        if (this.entity.isRemoved() || !this.entity.isAlive()) {
-            stopHum();
-            return;
-        }
+	@Override
+	public void tick() {
+		if (this.entity.isRemoved() || !this.entity.isAlive()) {
+			stopHum();
+			return;
+		}
 
-        // Prüfen, ob eine Klinge in Haupt- oder Zweithand aktiv ist
-        ItemStack main = this.entity.getMainHandItem();
-        ItemStack off = this.entity.getOffhandItem();
-        boolean activeMain = main.getItem() instanceof ItemLightsaber && ItemLightsaber.isActive(main);
-        boolean activeOff = off.getItem() instanceof ItemLightsaber && ItemLightsaber.isActive(off);
+		ItemStack main = this.entity.getMainHandItem();
+		ItemStack off = this.entity.getOffhandItem();
+		boolean activeMain = main.getItem() instanceof ItemLightsaber && ItemLightsaber.isActive(main);
+		boolean activeOff = off.getItem() instanceof ItemLightsaber && ItemLightsaber.isActive(off);
 
-        if (!activeMain && !activeOff) {
-            stopHum();
-            return;
-        }
+		if (!activeMain && !activeOff) {
+			stopHum();
+			return;
+		}
 
-        // Position mit dem Spieler mitbewegen
-        this.x = this.entity.getX();
-        this.y = this.entity.getY();
-        this.z = this.entity.getZ();
-    }
+		this.x = this.entity.getX();
+		this.y = this.entity.getY();
+		this.z = this.entity.getZ();
+	}
 
-    private void stopHum() {
-        this.stop();
-        if (this.onStopCallback != null) {
-            this.onStopCallback.run();
-        }
-    }
+	private void stopHum() {
+		this.stop();
+		if (this.onStopCallback != null) {
+			this.onStopCallback.run();
+		}
+	}
 }

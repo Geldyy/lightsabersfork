@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "pattern": [
+    "###",
+    "#-#",
+    "###"
+  ],
+  "key": {
+    "#": { "item": "minecraft:polished_blackstone" },
+    "-": { "tag": "lightsabersfork:crystals" }
+  },
+  "result": {
+    "count": 4,
+    "id": "lightsabersfork:black_forcestone"
+  }
+}

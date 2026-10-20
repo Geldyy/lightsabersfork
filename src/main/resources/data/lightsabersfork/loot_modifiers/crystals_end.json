@@ -1,0 +1,20 @@
+{
+  "type": "lightsabersfork:add_loot",
+  "conditions": [
+    {
+      "condition": "neoforge:loot_table_id",
+      "loot_table_id": "minecraft:chests/end_city_treasure"
+    }
+  ],
+  "items": [
+    "lightsabersfork:purple_crystal",
+    "lightsabersfork:magenta_crystal",
+    "lightsabersfork:pink_crystal",
+    "lightsabersfork:indigo_crystal",
+    "lightsabersfork:white_crystal"
+  ],
+  "chance": 0.60,
+  "min_count": 1,
+  "max_count": 2,
+  "pick_random_one": true
+}

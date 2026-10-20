@@ -19,36 +19,35 @@ import net.minecraft.world.level.Level;
 
 public class ItemCrystalPouch extends Item {
 
-    public ItemCrystalPouch(Properties properties) {
-        super(properties.stacksTo(1).component(DataComponents.CONTAINER, ItemContainerContents.EMPTY)); //
-    }
+	public ItemCrystalPouch(Properties properties) {
+		super(properties.stacksTo(1).component(DataComponents.CONTAINER, ItemContainerContents.EMPTY));
+	}
 
-    public static ItemStack createWithColor(CrystalColor color) {
-        ItemStack stack = new ItemStack(ALItems.CRYSTAL_POUCH.get());
-        // Falls die Methode getColor() heißt:
-        stack.<DyedItemColor>set(DataComponents.DYED_COLOR, new DyedItemColor(color.getColor(), true));
-        return stack;
-    }
+	public static ItemStack createWithColor(CrystalColor color) {
+		ItemStack stack = new ItemStack(ALItems.CRYSTAL_POUCH.get());
 
-    public static int getColor(ItemStack stack) {
-        return DyedItemColor.getOrDefault(stack, 0xFFFFFF);
-    }
+		stack.<DyedItemColor>set(DataComponents.DYED_COLOR, new DyedItemColor(color.getColor(), true));
+		return stack;
+	}
 
-    @Override
-    public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
-        ItemStack heldStack = player.getItemInHand(hand); //
+	public static int getColor(ItemStack stack) {
+		return DyedItemColor.getOrDefault(stack, 0xFFFFFF);
+	}
 
-        if (!level.isClientSide() && player instanceof ServerPlayer serverPlayer) { //
-            int slotIndex = (hand == InteractionHand.MAIN_HAND) ? player.getInventory().selected : 40; //
+	@Override
+	public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
+		ItemStack heldStack = player.getItemInHand(hand);
 
-            serverPlayer.openMenu(new SimpleMenuProvider( //
-                    (id, playerInv, p) -> new CrystalPouchMenu(id, playerInv, heldStack, slotIndex), //
-                    Component.translatable("gui.lightsabersfork.crystal_pouch") //
-            ), buf -> {
-                buf.writeVarInt(slotIndex); //
-            });
-        }
+		if (!level.isClientSide() && player instanceof ServerPlayer serverPlayer) {
+			int slotIndex = (hand == InteractionHand.MAIN_HAND) ? player.getInventory().selected : 40;
 
-        return InteractionResultHolder.sidedSuccess(heldStack, level.isClientSide()); //
-    }
+			serverPlayer.openMenu(new SimpleMenuProvider(
+					(id, playerInv, p) -> new CrystalPouchMenu(id, playerInv, heldStack, slotIndex),
+					Component.translatable("gui.lightsabersfork.crystal_pouch")), buf -> {
+						buf.writeVarInt(slotIndex);
+					});
+		}
+
+		return InteractionResultHolder.sidedSuccess(heldStack, level.isClientSide());
+	}
 }

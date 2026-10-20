@@ -1,0 +1,27 @@
+{
+  "type": "lightsabersfork:add_loot",
+  "conditions": [
+    {
+      "condition": "neoforge:loot_table_id",
+      "loot_table_id": "minecraft:chests/bastion_other"
+    }
+  ],
+  "items": [
+    "lightsabersfork:mauler_emitter",
+    "lightsabersfork:mauler_switch_module",
+    "lightsabersfork:mauler_grip",
+    "lightsabersfork:mauler_pommel",
+    "lightsabersfork:reborn_emitter",
+    "lightsabersfork:reborn_switch_module",
+    "lightsabersfork:reborn_grip",
+    "lightsabersfork:reborn_pommel",
+    "lightsabersfork:mandalorian_emitter",
+    "lightsabersfork:mandalorian_switch_module",
+    "lightsabersfork:mandalorian_grip",
+    "lightsabersfork:mandalorian_pommel"
+  ],
+  "chance": 0.45,
+  "min_count": 1,
+  "max_count": 1,
+  "pick_random_one": true
+}

@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "lightsabersfork:block/resonant_kyber_cluster"
+  }
+}

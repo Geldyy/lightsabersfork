@@ -1,0 +1,23 @@
+{
+  "replace": false,
+  "values": [
+    "lightsabersfork:deep_blue_crystal",
+    "lightsabersfork:medium_blue_crystal",
+    "lightsabersfork:light_blue_crystal",
+    "lightsabersfork:arctic_blue_crystal",
+    "lightsabersfork:white_crystal",
+    "lightsabersfork:indigo_crystal",
+    "lightsabersfork:purple_crystal",
+    "lightsabersfork:magenta_crystal",
+    "lightsabersfork:pink_crystal",
+    "lightsabersfork:red_crystal",
+    "lightsabersfork:blood_orange_crystal",
+    "lightsabersfork:amber_crystal",
+    "lightsabersfork:yellow_crystal",
+    "lightsabersfork:gold_crystal",
+    "lightsabersfork:lime_green_crystal",
+    "lightsabersfork:green_crystal",
+    "lightsabersfork:mint_green_crystal",
+    "lightsabersfork:cyan_crystal"
+  ]
+}

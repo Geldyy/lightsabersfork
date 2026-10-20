@@ -1,0 +1,26 @@
+{
+  "parent": "lightsabersfork:lightsabers/elixir_respec",
+  "display": {
+    "icon": {
+      "id": "lightsabersfork:focusing_crystal_prismatic"
+    },
+    "title": {
+      "translate": "advancements.lightsabersfork.chosen_one.title"
+    },
+    "description": {
+      "translate": "advancements.lightsabersfork.chosen_one.desc"
+    },
+    "frame": "challenge",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": true
+  },
+  "rewards": {
+    "experience": 10000
+  },
+  "criteria": {
+    "unlocked": {
+      "trigger": "minecraft:impossible"
+    }
+  }
+}

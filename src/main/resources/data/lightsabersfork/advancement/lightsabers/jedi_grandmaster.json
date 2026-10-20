@@ -1,0 +1,25 @@
+{
+  "parent": "lightsabersfork:lightsabers/jedi_all_skills",
+  "display": {
+    "icon": {
+      "id": "lightsabersfork:white_crystal"
+    },
+    "title": {
+      "translate": "advancements.lightsabersfork.jedi_grandmaster.title"
+    },
+    "description": {
+      "translate": "advancements.lightsabersfork.jedi_grandmaster.desc"
+    },
+    "frame": "challenge",
+    "show_toast": true,
+    "announce_to_chat": true
+  },
+  "rewards": {
+    "experience": 3500
+  },
+  "criteria": {
+    "unlocked": {
+      "trigger": "minecraft:impossible"
+    }
+  }
+}

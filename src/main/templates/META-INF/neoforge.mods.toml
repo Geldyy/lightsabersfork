@@ -36,7 +36,7 @@ displayName="${mod_name}" #mandatory
 #displayURL="https://change.me.to.your.mods.homepage.example.invalid/" #optional
 
 # A file name (in the root of the mod JAR) containing a logo for display
-#logoFile="examplemod.png" #optional
+logoFile="icon.png" #optional
 
 # A text field displayed in the mod UI
 #credits="" #optional
@@ -46,7 +46,7 @@ authors="FiskFille, PikaPlus"
 
 # The description text for the mod (multi line!) (#mandatory)
 description='''
-Port of Advanced Lightsabers
+An expanded and reimagined port of FiskFille's iconic Advanced Lightsabers mod, featuring a completely overhauled Force system and intricate skill trees for both Jedi and Sith.
 '''
 
 # The [[mixins]] block allows you to declare your mixin config to FML so that it gets loaded.
@@ -87,6 +87,23 @@ config="${mod_id}.mixins.json"
     versionRange="${minecraft_version_range}"
     ordering="NONE"
     side="BOTH"
+
+# Recommended optional dependency for recipe viewing
+[[dependencies.${mod_id}]]
+    modId="jei"
+    type="optional"
+    reason="Recommended for viewing lightsaber forge recipes, disassembly station, and crystal modifications."
+    versionRange="[19.64.0.455,)"
+    ordering="AFTER"
+    side="BOTH"
+
+# Optional dependency for Punchy! first-person animations
+[[dependencies.${mod_id}]]
+    modId="punchy"
+    type="optional"
+    reason="Optional support for dynamic first-person lightsaber animations and weapon grips."
+    ordering="NONE"
+    side="CLIENT"
 
 # Features are specific properties of the game environment, that you may want to declare you require. This example declares
 # that your mod requires GL version 3.2 or higher. Other features will be added. They are side aware so declaring this won't

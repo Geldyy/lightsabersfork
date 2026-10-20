@@ -1,0 +1,41 @@
+{
+  "parent": "lightsabersfork:lightsabers/find_holocron",
+  "display": {
+    "icon": {
+      "id": "lightsabersfork:pristine_purification_elixir"
+    },
+    "title": {
+      "translate": "advancements.lightsabersfork.elixir_respec.title"
+    },
+    "description": {
+      "translate": "advancements.lightsabersfork.elixir_respec.desc"
+    },
+    "frame": "challenge",
+    "show_toast": true,
+    "announce_to_chat": true
+  },
+  "rewards": {
+    "experience": 1200
+  },
+  "criteria": {
+    "drank_faction": {
+      "trigger": "minecraft:consume_item",
+      "conditions": {
+        "item": {
+          "items": "lightsabersfork:purification_elixir"
+        }
+      }
+    },
+    "drank_pristine": {
+      "trigger": "minecraft:consume_item",
+      "conditions": {
+        "item": {
+          "items": "lightsabersfork:pristine_purification_elixir"
+        }
+      }
+    }
+  },
+  "requirements": [
+    ["drank_faction", "drank_pristine"]
+  ]
+}

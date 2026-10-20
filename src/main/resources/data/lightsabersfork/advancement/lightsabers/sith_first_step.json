@@ -1,0 +1,25 @@
+{
+  "parent": "lightsabersfork:lightsabers/find_holocron",
+  "display": {
+    "icon": {
+      "id": "lightsabersfork:blood_orange_crystal"
+    },
+    "title": {
+      "translate": "advancements.lightsabersfork.sith_first_step.title"
+    },
+    "description": {
+      "translate": "advancements.lightsabersfork.sith_first_step.desc"
+    },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": true
+  },
+  "rewards": {
+    "experience": 350
+  },
+  "criteria": {
+    "unlocked": {
+      "trigger": "minecraft:impossible"
+    }
+  }
+}

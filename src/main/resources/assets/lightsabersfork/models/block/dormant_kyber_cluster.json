@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:block/cross",
+  "textures": {
+    "cross": "lightsabersfork:block/dormant_kyber_cluster"
+  }
+}

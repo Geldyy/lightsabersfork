@@ -1,0 +1,45 @@
+{
+  "parent": "lightsabersfork:lightsabers/root",
+  "display": {
+    "icon": {
+      "id": "lightsabersfork:jedi_holocron"
+    },
+    "title": {
+      "translate": "advancements.lightsabersfork.find_holocron.title"
+    },
+    "description": {
+      "translate": "advancements.lightsabersfork.find_holocron.desc"
+    },
+    "frame": "goal",
+    "show_toast": true,
+    "announce_to_chat": true
+  },
+  "rewards": {
+    "experience": 600
+  },
+  "criteria": {
+    "has_jedi": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": "lightsabersfork:jedi_holocron"
+          }
+        ]
+      }
+    },
+    "has_sith": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": "lightsabersfork:sith_holocron"
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    ["has_jedi", "has_sith"]
+  ]
+}

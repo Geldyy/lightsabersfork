@@ -1,5 +1,6 @@
 package com.fiskmods.pika.lightsabers.block.entity;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.jetbrains.annotations.Nullable;
@@ -59,15 +60,13 @@ public class LightsaberForgeBlockEntity extends BlockEntity implements MenuProvi
         }
         return list;
     }
-    
-    // --- NEU: SPEICHERN BEIM WELTSPEICHERN ---
+
     @Override
     protected void saveAdditional(CompoundTag tag, HolderLookup.Provider registries) {
         super.saveAdditional(tag, registries);
         tag.put("Inventory", this.inventory.serializeNBT(registries));
     }
 
-    // --- NEU: LADEN BEIM WELTLADEN ---
     @Override
     protected void loadAdditional(CompoundTag tag, HolderLookup.Provider registries) {
         super.loadAdditional(tag, registries);
@@ -78,27 +77,34 @@ public class LightsaberForgeBlockEntity extends BlockEntity implements MenuProvi
 
     private void updateResult() {
         Item colorCrystal = null;
-        List<Item> focusCrystals = new java.util.ArrayList<>();
+        List<Item> focusCrystals = new ArrayList<>();
         Item circuitry = null;
         Item emitter = null;
         Item switchSection = null;
         Item grip = null;
         Item pommel = null;
 
-        // 1. Feste Slots 0-5 auslesen
         for (int i = 0; i <= 5; i++) {
             ItemStack stack = inventory.getStackInSlot(i);
-            if (stack.isEmpty()) continue;
+            if (stack.isEmpty()) {
+                continue;
+            }
 
-            if (i == 0 && stack.getItem() instanceof ItemLightsaberPart part && part.getPartType() == PartType.EMITTER) emitter = stack.getItem();
-            else if (i == 1 && stack.getItem() instanceof ItemLightsaberPart part && part.getPartType() == PartType.SWITCH_SECTION) switchSection = stack.getItem();
-            else if (i == 2 && stack.getItem() instanceof ItemLightsaberPart part && part.getPartType() == PartType.BODY) grip = stack.getItem();
-            else if (i == 3 && stack.getItem() instanceof ItemLightsaberPart) pommel = stack.getItem();
-            else if (i == 4 && stack.getItem() == ALItems.CIRCUITRY.get()) circuitry = stack.getItem();
-            else if (i == 5 && stack.getItem() instanceof ItemColorCrystal) colorCrystal = stack.getItem();
+            if (i == 0 && stack.getItem() instanceof ItemLightsaberPart part && part.getPartType() == PartType.EMITTER) {
+                emitter = stack.getItem();
+            } else if (i == 1 && stack.getItem() instanceof ItemLightsaberPart part && part.getPartType() == PartType.SWITCH_SECTION) {
+                switchSection = stack.getItem();
+            } else if (i == 2 && stack.getItem() instanceof ItemLightsaberPart part && part.getPartType() == PartType.BODY) {
+                grip = stack.getItem();
+            } else if (i == 3 && stack.getItem() instanceof ItemLightsaberPart) {
+                pommel = stack.getItem();
+            } else if (i == 4 && stack.getItem() == ALItems.CIRCUITRY.get()) {
+                circuitry = stack.getItem();
+            } else if (i == 5 && stack.getItem() instanceof ItemColorCrystal) {
+                colorCrystal = stack.getItem();
+            }
         }
 
-        // 2. Optionale Fokus-Kristall-Slots 6 & 7 auslesen
         ItemStack slot6 = inventory.getStackInSlot(6);
         if (!slot6.isEmpty() && slot6.getItem() instanceof ItemFocusingCrystal) {
             focusCrystals.add(slot6.getItem());
@@ -109,7 +115,6 @@ public class LightsaberForgeBlockEntity extends BlockEntity implements MenuProvi
             focusCrystals.add(slot7.getItem());
         }
 
-        // 3. Wenn alle Pflichtteile vorhanden sind, Ergebnis generieren
         if (emitter != null && switchSection != null && grip != null && pommel != null && circuitry != null && colorCrystal != null) {
             ItemStack lightsaber = new ItemStack(ALItems.LIGHTSABER.get());
             LightsaberData data = new LightsaberData(colorCrystal, focusCrystals, emitter, switchSection, grip, pommel);
@@ -118,7 +123,6 @@ public class LightsaberForgeBlockEntity extends BlockEntity implements MenuProvi
         } else {
             inventory.setStackInSlot(8, ItemStack.EMPTY);
         }
-        
     }
 
     @Override

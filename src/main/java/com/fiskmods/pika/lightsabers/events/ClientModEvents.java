@@ -35,7 +35,6 @@ import com.fiskmods.pika.lightsabers.client.render.models.blocks.ModelSithStoneC
 
 import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
 import net.minecraft.world.item.component.DyedItemColor;
-import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.client.event.EntityRenderersEvent;
@@ -46,152 +45,149 @@ import net.neoforged.neoforge.client.event.RegisterMenuScreensEvent;
 import net.neoforged.neoforge.client.extensions.common.IClientItemExtensions;
 import net.neoforged.neoforge.client.extensions.common.RegisterClientExtensionsEvent;
 
-@EventBusSubscriber(modid = AdvancedLightsabers.MODID, value = Dist.CLIENT, bus = EventBusSubscriber.Bus.MOD)
+@EventBusSubscriber(modid = AdvancedLightsabers.MODID)
 public class ClientModEvents {
-	
+
 	@SubscribeEvent
 	public static void registerItemColors(RegisterColorHandlersEvent.Item event) {
-	    event.register((stack, tintIndex) -> {
-	        if (tintIndex == 1) {
-	            int color = DyedItemColor.getOrDefault(stack, -1);
-	            // Stellt sicher, dass der Alpha-Kanal immer voll auf 0xFF gesetzt ist
-	            return color == -1 ? -1 : (0xFF000000 | color);
-	        }
-	        // layer0 (Basistasche): -1 entspricht 0xFFFFFFFF (voll deckendes Weiß / kein Farbfilter)
-	        return -1;
-	    }, ALItems.CRYSTAL_POUCH.get());
+		event.register((stack, tintIndex) -> {
+			if (tintIndex == 1) {
+				int color = DyedItemColor.getOrDefault(stack, -1);
+
+				return color == -1 ? -1 : (0xFF000000 | color);
+			}
+
+			return -1;
+		}, ALItems.CRYSTAL_POUCH.get());
+		event.register((stack, tintIndex) -> {
+
+			return tintIndex == 0 ? 0x991122 : -1;
+		}, ALItems.NETHER_INFUSED_ELIXIR.get());
+
+		event.register((stack, tintIndex) -> {
+			return tintIndex == 0 ? 0x2ECC71 : -1;
+		}, ALItems.PURIFICATION_ELIXIR.get());
+
+		event.register((stack, tintIndex) -> {
+			return tintIndex == 0 ? 0x00E5FF : -1;
+		}, ALItems.PRISTINE_PURIFICATION_ELIXIR.get());
 	}
 
-    @SubscribeEvent
-    public static void registerScreens(RegisterMenuScreensEvent event) {
-        event.register(ALMenuTypes.LIGHTSABER_FORGE.get(), LightsaberForgeScreen::new);
-        event.register(ALMenuTypes.DISASSEMBLY_STATION.get(), DisassemblyStationScreen::new);
-        event.register(ALMenuTypes.CRYSTAL_POUCH.get(), CrystalPouchScreen::new);
-    }
+	@SubscribeEvent
+	public static void registerScreens(RegisterMenuScreensEvent event) {
+		event.register(ALMenuTypes.LIGHTSABER_FORGE.get(), LightsaberForgeScreen::new);
+		event.register(ALMenuTypes.DISASSEMBLY_STATION.get(), DisassemblyStationScreen::new);
+		event.register(ALMenuTypes.CRYSTAL_POUCH.get(), CrystalPouchScreen::new);
+	}
 
-    @SubscribeEvent
-    public static void registerLayerDefinitions(EntityRenderersEvent.RegisterLayerDefinitions event) {
-        event.registerLayerDefinition(ModelLightsaberStand.LAYER_LOCATION, ModelLightsaberStand::createBodyLayer);
-        event.registerLayerDefinition(ModelDisassemblyStation.LAYER_LOCATION, ModelDisassemblyStation::createBodyLayer);
-        event.registerLayerDefinition(ModelLightsaberForge.LAYER_LOCATION, ModelLightsaberForge::createBodyLayer);
-        event.registerLayerDefinition(ModelCrystal.LAYER_LOCATION, ModelCrystal::createBodyLayer);
-        event.registerLayerDefinition(ModelSithCoffin.LAYER_LOCATION, ModelSithCoffin::createBodyLayer);
-        event.registerLayerDefinition(ModelSithStoneCoffin.LAYER_LOCATION, ModelSithStoneCoffin::createBodyLayer);
-        event.registerLayerDefinition(ModelMonolithOuter.LAYER_LOCATION, ModelMonolithOuter::createBodyLayer);
-        event.registerLayerDefinition(ModelMonolithInner.LAYER_LOCATION, ModelMonolithInner::createBodyLayer);
-    
-    }
+	@SubscribeEvent
+	public static void registerLayerDefinitions(EntityRenderersEvent.RegisterLayerDefinitions event) {
+		event.registerLayerDefinition(ModelLightsaberStand.LAYER_LOCATION, ModelLightsaberStand::createBodyLayer);
+		event.registerLayerDefinition(ModelDisassemblyStation.LAYER_LOCATION, ModelDisassemblyStation::createBodyLayer);
+		event.registerLayerDefinition(ModelLightsaberForge.LAYER_LOCATION, ModelLightsaberForge::createBodyLayer);
+		event.registerLayerDefinition(ModelCrystal.LAYER_LOCATION, ModelCrystal::createBodyLayer);
+		event.registerLayerDefinition(ModelSithCoffin.LAYER_LOCATION, ModelSithCoffin::createBodyLayer);
+		event.registerLayerDefinition(ModelSithStoneCoffin.LAYER_LOCATION, ModelSithStoneCoffin::createBodyLayer);
+		event.registerLayerDefinition(ModelMonolithOuter.LAYER_LOCATION, ModelMonolithOuter::createBodyLayer);
+		event.registerLayerDefinition(ModelMonolithInner.LAYER_LOCATION, ModelMonolithInner::createBodyLayer);
 
-    @SubscribeEvent
-    public static void registerRenderers(EntityRenderersEvent.RegisterRenderers event) {
-        event.registerEntityRenderer(ALEntities.LIGHTSABER.get(), RenderLightsaberEntity::new);
-        event.registerBlockEntityRenderer(ALBlockEntities.LIGHTSABER_STAND.get(), LightsaberStandRenderer::new);
-        event.registerBlockEntityRenderer(ALBlockEntities.DISASSEMBLY_STATION.get(), DisassemblyStationRenderer::new);
-        event.registerBlockEntityRenderer(ALBlockEntities.LIGHTSABER_FORGE.get(), LightsaberForgeRenderer::new);
-        event.registerBlockEntityRenderer(ALBlockEntities.HOLOCRON.get(), HolocronRenderer::new);
-        event.registerBlockEntityRenderer(ALBlockEntities.SITH_COFFIN.get(), SithCoffinRenderer::new);
-        event.registerBlockEntityRenderer(ALBlockEntities.SITH_STONE_COFFIN.get(), SithStoneCoffinRenderer::new);
-    }
+	}
 
-    @SubscribeEvent
-    public static void registerClientExtensions(RegisterClientExtensionsEvent event) {
-        // 1. Lichtschwert-BEWLR
-        event.registerItem(new IClientItemExtensions() {
-            private LightsaberItemRenderer renderer;
+	@SubscribeEvent
+	public static void registerRenderers(EntityRenderersEvent.RegisterRenderers event) {
+		event.registerEntityRenderer(ALEntities.LIGHTSABER.get(), RenderLightsaberEntity::new);
+		event.registerEntityRenderer(ALEntities.TELEKINETIC_BLOCK.get(),
+				com.fiskmods.pika.lightsabers.client.render.entity.RenderTelekineticBlock::new);
+		event.registerEntityRenderer(ALEntities.FORCE_PHANTOM.get(),
+				com.fiskmods.pika.lightsabers.client.render.entity.ForcePhantomRenderer::new);
+		event.registerBlockEntityRenderer(ALBlockEntities.LIGHTSABER_STAND.get(), LightsaberStandRenderer::new);
+		event.registerBlockEntityRenderer(ALBlockEntities.DISASSEMBLY_STATION.get(), DisassemblyStationRenderer::new);
+		event.registerBlockEntityRenderer(ALBlockEntities.LIGHTSABER_FORGE.get(), LightsaberForgeRenderer::new);
+		event.registerBlockEntityRenderer(ALBlockEntities.HOLOCRON.get(), HolocronRenderer::new);
+		event.registerBlockEntityRenderer(ALBlockEntities.SITH_COFFIN.get(), SithCoffinRenderer::new);
+		event.registerBlockEntityRenderer(ALBlockEntities.SITH_STONE_COFFIN.get(), SithStoneCoffinRenderer::new);
+	}
 
-            @Override
-            public BlockEntityWithoutLevelRenderer getCustomRenderer() {
-                if (this.renderer == null) {
-                    this.renderer = new LightsaberItemRenderer();
-                }
-                return this.renderer;
-            }
-        }, ALItems.LIGHTSABER.get());
+	@SubscribeEvent
+	public static void registerClientExtensions(RegisterClientExtensionsEvent event) {
 
-        // 2. 3D-Lichtschwertständer-BEWLR
-        event.registerItem(new IClientItemExtensions() {
-            @Override
-            public BlockEntityWithoutLevelRenderer getCustomRenderer() {
-                return LightsaberStandItemRenderer.INSTANCE;
-            }
-        }, ALItems.LIGHTSABER_STAND.get());
-        
-     // 3D-Sarkophage BEWLR
-        event.registerItem(new IClientItemExtensions() {
-            @Override
-            public BlockEntityWithoutLevelRenderer getCustomRenderer() {
-                return SithCoffinItemRenderer.INSTANCE;
-            }
-        }, ALItems.SITH_COFFIN.get());
+		event.registerItem(new IClientItemExtensions() {
+			private LightsaberItemRenderer renderer;
 
-        event.registerItem(new IClientItemExtensions() {
-            @Override
-            public BlockEntityWithoutLevelRenderer getCustomRenderer() {
-                return SithStoneCoffinItemRenderer.INSTANCE;
-            }
-        }, ALItems.SITH_STONE_COFFIN.get());
+			@Override
+			public BlockEntityWithoutLevelRenderer getCustomRenderer() {
+				if (this.renderer == null) {
+					this.renderer = new LightsaberItemRenderer();
+				}
+				return this.renderer;
+			}
+		}, ALItems.LIGHTSABER.get());
 
-        // 3. 3D-Demontagestation-BEWLR
-        event.registerItem(new IClientItemExtensions() {
-            @Override
-            public BlockEntityWithoutLevelRenderer getCustomRenderer() {
-                return DisassemblyStationItemRenderer.INSTANCE;
-            }
-        }, ALItems.DISASSEMBLY_STATION.get());
+		event.registerItem(new IClientItemExtensions() {
+			@Override
+			public BlockEntityWithoutLevelRenderer getCustomRenderer() {
+				return LightsaberStandItemRenderer.INSTANCE;
+			}
+		}, ALItems.LIGHTSABER_STAND.get());
 
-        // 4. 3D-Lichtschwert-Schmiede-BEWLR
-        event.registerItem(new IClientItemExtensions() {
-            @Override
-            public BlockEntityWithoutLevelRenderer getCustomRenderer() {
-                return LightsaberForgeItemRenderer.INSTANCE;
-            }
-        }, ALItems.LIGHTSABER_FORGE_LIGHT_ITEM.get());
+		event.registerItem(new IClientItemExtensions() {
+			@Override
+			public BlockEntityWithoutLevelRenderer getCustomRenderer() {
+				return SithCoffinItemRenderer.INSTANCE;
+			}
+		}, ALItems.SITH_COFFIN.get());
 
-        // 5. 3D-Holocron-BEWLR (Jedi & Sith)
-        IClientItemExtensions holocronExtension = new IClientItemExtensions() {
-            @Override
-            public BlockEntityWithoutLevelRenderer getCustomRenderer() {
-                return HolocronItemRenderer.INSTANCE;
-            }
-        };
-        event.registerItem(holocronExtension, ALItems.JEDI_HOLOCRON.get(), ALItems.SITH_HOLOCRON.get());
+		event.registerItem(new IClientItemExtensions() {
+			@Override
+			public BlockEntityWithoutLevelRenderer getCustomRenderer() {
+				return SithStoneCoffinItemRenderer.INSTANCE;
+			}
+		}, ALItems.SITH_STONE_COFFIN.get());
 
-        // 6. 3D-Kristall-BEWLR für alle 18 Farben
-        IClientItemExtensions crystalExtension = new IClientItemExtensions() {
-            @Override
-            public BlockEntityWithoutLevelRenderer getCustomRenderer() {
-                return CrystalItemRenderer.INSTANCE;
-            }
-        };
+		event.registerItem(new IClientItemExtensions() {
+			@Override
+			public BlockEntityWithoutLevelRenderer getCustomRenderer() {
+				return DisassemblyStationItemRenderer.INSTANCE;
+			}
+		}, ALItems.DISASSEMBLY_STATION.get());
 
-        event.registerItem(crystalExtension,
-                ALItems.DEEP_BLUE_CRYSTAL.get(),
-                ALItems.MEDIUM_BLUE_CRYSTAL.get(),
-                ALItems.LIGHT_BLUE_CRYSTAL.get(),
-                ALItems.ARCTIC_BLUE_CRYSTAL.get(),
-                ALItems.WHITE_CRYSTAL.get(),
-                ALItems.INDIGO_CRYSTAL.get(),
-                ALItems.PURPLE_CRYSTAL.get(),
-                ALItems.MAGENTA_CRYSTAL.get(),
-                ALItems.PINK_CRYSTAL.get(),
-                ALItems.RED_CRYSTAL.get(),
-                ALItems.BLOOD_ORANGE_CRYSTAL.get(),
-                ALItems.AMBER_CRYSTAL.get(),
-                ALItems.YELLOW_CRYSTAL.get(),
-                ALItems.GOLD_CRYSTAL.get(),
-                ALItems.LIME_GREEN_CRYSTAL.get(),
-                ALItems.GREEN_CRYSTAL.get(),
-                ALItems.MINT_GREEN_CRYSTAL.get(),
-                ALItems.CYAN_CRYSTAL.get()
-        );
-    }
+		event.registerItem(new IClientItemExtensions() {
+			@Override
+			public BlockEntityWithoutLevelRenderer getCustomRenderer() {
+				return LightsaberForgeItemRenderer.INSTANCE;
+			}
+		}, ALItems.LIGHTSABER_FORGE_LIGHT_ITEM.get());
 
-    @SubscribeEvent
-    public static void registerKeyMappings(RegisterKeyMappingsEvent event) {
-        ALKeyBinds.register(event);
-    }
+		IClientItemExtensions holocronExtension = new IClientItemExtensions() {
+			@Override
+			public BlockEntityWithoutLevelRenderer getCustomRenderer() {
+				return HolocronItemRenderer.INSTANCE;
+			}
+		};
+		event.registerItem(holocronExtension, ALItems.JEDI_HOLOCRON.get(), ALItems.SITH_HOLOCRON.get());
 
-    @SubscribeEvent
-    public static void onRegisterGuiLayers(RegisterGuiLayersEvent event) {
-    }
+		IClientItemExtensions crystalExtension = new IClientItemExtensions() {
+			@Override
+			public BlockEntityWithoutLevelRenderer getCustomRenderer() {
+				return CrystalItemRenderer.INSTANCE;
+			}
+		};
+
+		event.registerItem(crystalExtension, ALItems.DEEP_BLUE_CRYSTAL.get(), ALItems.MEDIUM_BLUE_CRYSTAL.get(),
+				ALItems.LIGHT_BLUE_CRYSTAL.get(), ALItems.ARCTIC_BLUE_CRYSTAL.get(), ALItems.WHITE_CRYSTAL.get(),
+				ALItems.INDIGO_CRYSTAL.get(), ALItems.PURPLE_CRYSTAL.get(), ALItems.MAGENTA_CRYSTAL.get(),
+				ALItems.PINK_CRYSTAL.get(), ALItems.RED_CRYSTAL.get(), ALItems.BLOOD_ORANGE_CRYSTAL.get(),
+				ALItems.AMBER_CRYSTAL.get(), ALItems.YELLOW_CRYSTAL.get(), ALItems.GOLD_CRYSTAL.get(),
+				ALItems.LIME_GREEN_CRYSTAL.get(), ALItems.GREEN_CRYSTAL.get(), ALItems.MINT_GREEN_CRYSTAL.get(),
+				ALItems.CYAN_CRYSTAL.get());
+	}
+
+	@SubscribeEvent
+	public static void registerKeyMappings(RegisterKeyMappingsEvent event) {
+		ALKeyBinds.register(event);
+	}
+
+	@SubscribeEvent
+	public static void onRegisterGuiLayers(RegisterGuiLayersEvent event) {
+	}
 }

@@ -13,30 +13,27 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
 
 public record HolocronUsagePayload(BlockPos pos, boolean isOpening) implements CustomPacketPayload {
-    public static final Type<HolocronUsagePayload> TYPE = new Type<>(ResourceLocation.fromNamespaceAndPath(AdvancedLightsabers.MODID, "holocron_usage"));
+	public static final Type<HolocronUsagePayload> TYPE = new Type<>(
+			ResourceLocation.fromNamespaceAndPath(AdvancedLightsabers.MODID, "holocron_usage"));
 
-    public static final StreamCodec<ByteBuf, HolocronUsagePayload> STREAM_CODEC = StreamCodec.composite(
-            BlockPos.STREAM_CODEC,
-            HolocronUsagePayload::pos,
-            ByteBufCodecs.BOOL,
-            HolocronUsagePayload::isOpening,
-            HolocronUsagePayload::new
-    );
+	public static final StreamCodec<ByteBuf, HolocronUsagePayload> STREAM_CODEC = StreamCodec.composite(
+			BlockPos.STREAM_CODEC, HolocronUsagePayload::pos, ByteBufCodecs.BOOL, HolocronUsagePayload::isOpening,
+			HolocronUsagePayload::new);
 
-    @Override
-    public Type<? extends CustomPacketPayload> type() {
-        return TYPE;
-    }
+	@Override
+	public Type<? extends CustomPacketPayload> type() {
+		return TYPE;
+	}
 
-    public static void handle(HolocronUsagePayload payload, IPayloadContext context) {
-        context.enqueueWork(() -> {
-            var player = context.player();
-            if (player != null && player.level().isLoaded(payload.pos())) {
-                BlockEntity be = player.level().getBlockEntity(payload.pos());
-                if (be instanceof HolocronBlockEntity holocron) {
-                    holocron.setPlayerUsing(player, payload.isOpening());
-                }
-            }
-        });
-    }
+	public static void handle(HolocronUsagePayload payload, IPayloadContext context) {
+		context.enqueueWork(() -> {
+			var player = context.player();
+			if (player != null && player.level().isLoaded(payload.pos())) {
+				BlockEntity be = player.level().getBlockEntity(payload.pos());
+				if (be instanceof HolocronBlockEntity holocron) {
+					holocron.setPlayerUsing(player, payload.isOpening());
+				}
+			}
+		});
+	}
 }

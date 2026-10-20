@@ -1,0 +1,32 @@
+{
+  "parent": "lightsabersfork:lightsabers/craft_forge",
+  "display": {
+    "icon": {
+      "id": "lightsabersfork:lightsaber"
+    },
+    "title": {
+      "translate": "advancements.lightsabersfork.first_lightsaber.title"
+    },
+    "description": {
+      "translate": "advancements.lightsabersfork.first_lightsaber.desc"
+    },
+    "frame": "goal",
+    "show_toast": true,
+    "announce_to_chat": true
+  },
+  "rewards": {
+    "experience": 500
+  },
+  "criteria": {
+    "has_saber": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": "lightsabersfork:lightsaber"
+          }
+        ]
+      }
+    }
+  }
+}

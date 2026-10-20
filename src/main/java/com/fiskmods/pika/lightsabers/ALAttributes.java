@@ -7,9 +7,11 @@ import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
 
 public class ALAttributes {
-    public static final DeferredRegister<Attribute> ATTRIBUTES = DeferredRegister.create(Registries.ATTRIBUTE, AdvancedLightsabers.MODID);
+	public static final DeferredRegister<Attribute> ATTRIBUTES = DeferredRegister.create(Registries.ATTRIBUTE,
+			AdvancedLightsabers.MODID);
 
-    // FIX: Typ von Supplier<Attribute> auf DeferredHolder<Attribute, Attribute> ändern!
-    public static final DeferredHolder<Attribute, Attribute> LIGHTSABER_IMMUNITY = ATTRIBUTES.register("lightsaber_immunity",
-            () -> new RangedAttribute("attribute.lightsabersfork.lightsaber_immunity", 0.0D, 0.0D, 1.0D).setSyncable(true));
+	public static final DeferredHolder<Attribute, Attribute> LIGHTSABER_IMMUNITY = ATTRIBUTES.register(
+			"lightsaber_immunity",
+			() -> new RangedAttribute("attribute.lightsabersfork.lightsaber_immunity", 0.0D, 0.0D, 1.0D)
+					.setSyncable(true));
 }

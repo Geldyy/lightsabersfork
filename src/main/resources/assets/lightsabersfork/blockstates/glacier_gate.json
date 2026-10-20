@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "open=false": {
+      "model": "lightsabersfork:block/glacier_gate"
+    },
+    "open=true": {
+      "model": "lightsabersfork:block/glacier_gate_open"
+    }
+  }
+}

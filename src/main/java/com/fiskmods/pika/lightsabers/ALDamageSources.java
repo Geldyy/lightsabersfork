@@ -10,15 +10,11 @@ import net.minecraft.world.level.Level;
 
 public class ALDamageSources {
 
-    public static final ResourceKey<DamageType> LIGHTSABER = ResourceKey.create(
-        Registries.DAMAGE_TYPE,
-        ResourceLocation.fromNamespaceAndPath(AdvancedLightsabers.MODID, "lightsaber")
-    );
+	public static final ResourceKey<DamageType> LIGHTSABER = ResourceKey.create(Registries.DAMAGE_TYPE,
+			ResourceLocation.fromNamespaceAndPath(AdvancedLightsabers.MODID, "lightsaber"));
 
-    public static DamageSource causeLightsaberDamage(Level level, Entity attacker) {
-        return new DamageSource(
-            level.registryAccess().registryOrThrow(Registries.DAMAGE_TYPE).getHolderOrThrow(LIGHTSABER),
-            attacker
-        );
-    }
+	public static DamageSource causeLightsaberDamage(Level level, Entity attacker) {
+		return new DamageSource(
+				level.registryAccess().registryOrThrow(Registries.DAMAGE_TYPE).getHolderOrThrow(LIGHTSABER), attacker);
+	}
 }

@@ -1,0 +1,24 @@
+{
+  "parent": "lightsabersfork:lightsabers/first_lightsaber",
+  "display": {
+    "icon": {
+      "id": "lightsabersfork:mauler_emitter"
+    },
+    "title": {
+      "translate": "advancements.lightsabersfork.double_saber.title"
+    },
+    "description": {
+      "translate": "advancements.lightsabersfork.double_saber.desc"
+    },
+    "frame": "challenge",
+    "show_toast": true,
+    "announce_to_chat": true
+  },
+  "rewards": {
+    "experience": 1000
+  },
+  "criteria": {
+    "crafted_double": {
+      "trigger": "minecraft:impossible"
+    }
+}

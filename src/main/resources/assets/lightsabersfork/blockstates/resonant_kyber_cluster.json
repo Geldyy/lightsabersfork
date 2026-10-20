@@ -1,0 +1,30 @@
+{
+  "variants": {
+    "facing=down": {
+      "model": "lightsabersfork:block/resonant_kyber_cluster",
+      "x": 180
+    },
+    "facing=east": {
+      "model": "lightsabersfork:block/resonant_kyber_cluster",
+      "x": 90,
+      "y": 90
+    },
+    "facing=north": {
+      "model": "lightsabersfork:block/resonant_kyber_cluster",
+      "x": 90
+    },
+    "facing=south": {
+      "model": "lightsabersfork:block/resonant_kyber_cluster",
+      "x": 90,
+      "y": 180
+    },
+    "facing=up": {
+      "model": "lightsabersfork:block/resonant_kyber_cluster"
+    },
+    "facing=west": {
+      "model": "lightsabersfork:block/resonant_kyber_cluster",
+      "x": 90,
+      "y": 270
+    }
+  }
+}

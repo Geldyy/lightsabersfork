@@ -15,7 +15,7 @@ import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.tick.PlayerTickEvent;
 
-@EventBusSubscriber(modid = AdvancedLightsabers.MODID, bus = EventBusSubscriber.Bus.GAME)
+@EventBusSubscriber(modid = AdvancedLightsabers.MODID)
 public class LightsaberRangeHandler {
 
     private static final ResourceLocation RANGE_MODIFIER_ID = ResourceLocation.fromNamespaceAndPath(AdvancedLightsabers.MODID, "lightsaber_range_boost");
@@ -48,11 +48,9 @@ public class LightsaberRangeHandler {
     private static void applyOrRemoveModifier(AttributeInstance attribute, boolean apply, double percent) {
         if (attribute == null) return;
 
-        // Prüfen, ob der Modifikator aktuell bereits auf dem Attribut liegt
         boolean hasModifier = attribute.getModifier(RANGE_MODIFIER_ID) != null;
 
         if (apply && percent > 0.0) {
-            // Nur hinzufügen, wenn er noch NICHT da ist
             if (!hasModifier) {
                 double modifierValue = percent / 100.0;
                 attribute.addTransientModifier(new AttributeModifier(
@@ -62,7 +60,6 @@ public class LightsaberRangeHandler {
                 ));
             }
         } else {
-            // Nur entfernen, wenn er aktuell vorhanden ist
             if (hasModifier) {
                 attribute.removeModifier(RANGE_MODIFIER_ID);
             }
