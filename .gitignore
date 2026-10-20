@@ -55,3 +55,8 @@ ehthumbs.db
 
 ### Scratch & Temporary ###
 scratch/
+
+### Stonecutter ###
+versions/**/build/
+versions/**/run/
+.sc_active_version
