@@ -1,3 +1,50 @@
+
+Glorified Description, by chernov/makar:
+
+# Advanced Lightsabers (Unofficial Fork)
+
+An unofficial fork and continuation of the original **Advanced Lightsabers** mod (originally created by FiskFille). 
+
+> **Notice:** This project is currently maintained for personal use and experimentation. It is not an official release, but you are welcome to clone and compile it yourself.
+
+---
+
+## 🌿 Branch Overview
+
+* **`26.2` (Active Development):**  
+  The main act of ongoing work. Currently for NeoForge 26.2. Code here represents the latest Features.
+* **`main`:**  
+  Contains the initial 1.21.1 baseline version of the fork, unfinished and not fully playable in Survival.
+* **`multiversion-stonecutter` (Deprecated / Archived):**  
+  An early attempt at setting up a multi-version build with Antigravity via Stonecutter that was abandoned in favor of dedicated branches.
+* **Backport Plans:**  
+  Features from 26.2 will be backported to 1.21.1 once the 26.2 version stabilizes. A port to 26.1.2 is currently not planned unless there is significant interest.
+
+---
+
+## 🎨 Help Wanted: UI & Texture Artists!
+
+I am solely a programmer and **did not create the textures myself**. Currently, the mod relies on legacy assets, placeholders, and AI-generated sprites.
+
+If you have experience with:
+* Minecraft pixel art / item and block textures
+* 3D models (Stations, Monolith Textures)
+* Custom UI design
+
+...and are interested in giving this mod a unified, visual overhaul, please reach out to me on **Discord (`pikaplus`)**!
+
+---
+
+## 📜 Credits & Disclaimers
+
+* **Original Mod & Assets:** FiskFille (original creator of *Advanced Lightsabers*). A major portion of original models/textures belongs to FiskFille.
+* **Additional Textures:** Placeholder assets generated with Google Gemini.
+* **Code & Logic:** Maintained and adapted by me, with assistance from Google Search and Google Gemini for complex mathematical algorithms.
+
+------------
+
+handwritten Description:
+
 Main branch contains the "initial" Version of my Advanced Lightsaber Fork, for newer Versions. 
 While making it, i've decided to switch my personal Project to the 26.2 so i've switched Development.
 
