@@ -1,25 +1,7 @@
+Main branch contains the "initial" Version of my Advanced Lightsaber Fork, for newer Versions. 
+While making it, i've decided to switch my personal Project to the 26.2 so i've switched Development.
 
-Installation information
-=======
+I will backport a lot of newer Features to the 1.21.1 Version of this Mod, but this may take a while, since i only can focus on one thing at a time.
+Currently only the 26.2 is actively beeing developed! Backport to 26.1.2? eventually, idk. Not sure about that, since i won't play the 26.1.2, but if enough intrest develops, i will probably do that!
 
-This template repository can be directly cloned to get you started with a new
-mod. Simply create a new repository cloned from this one, by following the
-instructions provided by [GitHub](https://docs.github.com/en/repositories/creating-and-managing-repositories/creating-a-repository-from-a-template).
-
-Once you have your clone, simply open the repository in the IDE of your choice. The usual recommendation for an IDE is either IntelliJ IDEA or Eclipse.
-
-If at any point you are missing libraries in your IDE, or you've run into problems you can
-run `gradlew --refresh-dependencies` to refresh the local cache. `gradlew clean` to reset everything 
-{this does not affect your code} and then start the process again.
-
-Mapping Names:
-============
-By default, the MDK is configured to use the official mapping names from Mojang for methods and fields 
-in the Minecraft codebase. These names are covered by a specific license. All modders should be aware of this
-license. For the latest license text, refer to the mapping file itself, or the reference copy here:
-https://github.com/NeoForged/NeoForm/blob/main/Mojang.md
-
-Additional Resources: 
-==========
-Community Documentation: https://docs.neoforged.net/  
-NeoForged Discord: https://discord.neoforged.net/
+Currently nothing official and only for personal Use.
